@@ -1,0 +1,57 @@
+/* --------------------导航栏 logo 按钮 提示等的颜色-------------------- */
+
+/* 导航栏/按钮 */
+@navigation-btn-color: #000000;
+
+/* 提示色 */
+@prompt-color: #6ec864;
+
+/* logo/按钮 */
+@logobtnColor1: #ffd400;
+@logo-btnColor2: #00aaff;
+@logo-btnColor3: #ffa526;
+@logo-btnColor4: #ff5b4c;
+@tag-color: rgba(23, 143, 255, 0.1);
+
+/* 背景色 */
+@backColor: #eeeeee;
+
+/* 边框/分割线 */
+@borderColor: #e5e5e5;
+
+/* 表头颜色/辅助色 */
+@table-headColor: #f7f7f7;
+
+/* --------------------字体颜色-------------------- */
+
+/* 标题/正文 */
+@title-textColor: #191919;
+
+/* 正文文字 */
+@textColor: #7f7f7f;
+
+/* 辅助文字 */
+@assstTextColor1: #b2b2b2;
+
+/* 辅助文字 */
+@assstTextColor2: #cccccc;
+
+/* --------------------less混入测试-------------------- */
+@default-btnColor1: #ffffff;
+@disabled-btnColor1: #f2f2f2;
+@hover-btnColor1: #ebebeb;
+@hover-btnBorderColor1: #d1d1d1;
+
+/* 白底灰框黑字按钮 */
+.button-hover1() {
+  color: @title-textColor;
+  background: @default-btnColor1;
+  border: 1px solid @borderColor;
+  border-radius: 4px;
+
+  &:hover {
+    color: @title-textColor;
+    background: @hover-btnColor1;
+    border: 1px solid @hover-btnBorderColor1;
+  }
+}
