@@ -20,23 +20,13 @@ const CreateOrder = () => {
     form.submit()
   };
 
-  const onChange = (
-    value: DatePickerProps['value'] | RangePickerProps['value'],
-    dateString: [string, string] | string,
-  ) => {
-    console.log('Selected Time: ', value);
-    console.log('Formatted Selected Time: ', dateString);
-  };
+
 
   const onOk = (value: DatePickerProps['value'] | RangePickerProps['value']) => {
     console.log('onOk: ', value);
   };
 
-  const Time: React.FC = () => (
-    <Space direction="vertical" size={12}>
-      <DatePicker showTime onChange={onChange} onOk={onOk} />
-    </Space>
-  );
+
 
   const onGenderChange = () => { };
   return (
@@ -268,7 +258,9 @@ const CreateOrder = () => {
             </Col>
             <Col md={{ offset: 2, span: 9 }}>
               <Form.Item label="最晚发货时间-latestDeliveryTime" rules={[{ required: false }]}>
-                <Time />
+              <Space direction="vertical" size={12}>
+      <DatePicker showTime  onOk={onOk} />
+    </Space>
               </Form.Item>
             </Col>
           </Row>
