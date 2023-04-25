@@ -2,7 +2,7 @@
  * @constant API_ENV_MAP - API请求的环境变量映射
  */
 export const API_ENV_MAP = {
-  dev: "https://gateway.test.vevor.net",
+  dev: "http://gateway-dev.vevor.net",
   test: "https://gateway.test.vevor.net",
   pre: "https://gateway.preprod.vevor.net",
   prod: "https://gateway.vevor.net",

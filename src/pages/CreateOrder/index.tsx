@@ -4,209 +4,86 @@ import { MinusOutlined } from '@ant-design/icons';
 import './index.less';
 import GoodsTable from './components/goodsTable';
 import { connect } from 'umi';
+import { useState,useEffect } from 'react';
 
-
-
-
-const CreateOrder = () => {
-  const [form] = Form.useForm();
-
-  const onFinish = (val) => {
-    console.log(val)
+const CreateOrder = props => {
+  const { dispatch } = props;
+  const [form] = Form.useForm(); //form实例
+  const [salesPlatformOption, setSalesPlatformOption] = useState<any>([]); //销售平台下拉数据
+  const [salesSiteOption, setSalesSiteOption] = useState<any>([]); //销售站点下拉数据
+  const [salesModelOption, setSalesModelOption] = useState<any>([]); //销售模式下拉数据
+  const [buyerInfoOption, setBuyerInfoOption] = useState<any>([]); //买家信息下拉
+  const [currencyTypeOption, setcurrencyTypeOption] = useState<any>([]); //订单币种下拉数据
+  const [deliveryCompanyOption, setDeliveryCompanyOption] = useState<any>([]); //物流公司下拉数据
+  const [storeAccountOption,setStoreAccountOption]=useState([])//店铺账号下拉数据
+  const onFinish = val => {
+    console.log(val);
   };
-
 
   const onFill = () => {
-    form.submit()
+    form.submit();
   };
-
-
+  const getSourceEnums = async obj => {
+    try {
+      let res = await dispatch({ type: 'CreateOrder/asyncSourceEnums', payload: obj });
+      console.log(res);
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   const onOk = (value: DatePickerProps['value'] | RangePickerProps['value']) => {
     console.log('onOk: ', value);
   };
 
+  const onGenderChange = () => {};
+
+  
+  useEffect(()=>{
+    getSourceEnums({})
+  },[])
 
 
-  const onGenderChange = () => { };
   return (
-    <div className='creatOrder'>
-      <Form
-        form={form}
-        layout="vertical"
-        onFinish={onFinish}
-      >
-        <div style={{ marginLeft: 50 }}>
+    <div className="creatOrder">
+      <Form form={form} layout="vertical" onFinish={onFinish}>
+        <div style={{ marginLeft: '10%' }}>
           <Space>
-            <MinusOutlined rotate={90} className='line' />
-          </Space>
-          <span className="base-info">基础信息-商品信息</span>
-          <Row style={{ marginTop: 20 }}>
-            <Col span={20}>
-              <Form.Item name="goodsName" label="商品名称-goodsName" rules={[{ required: true }]}>
-                <Input />
-              </Form.Item>
-            </Col>
-            <Col span={9} offset={1} pull={1}>
-              <Form.Item name="goodsSn" label="商品编号-goodsSn" rules={[{ required: true }]}>
-                <Input />
-              </Form.Item>
-            </Col>
-            <Col span={4} offset={1}>
-              <Form.Item name="goodsTotalPrice" label="商品价格-goodsTotalPrice" rules={[{ required: true }]}>
-                <Input />
-              </Form.Item>
-            </Col>
-            <Col span={4} offset={1}>
-              <Form.Item name="goodsSku" label="商品sku-goodsSku" rules={[{ required: true }]}>
-                <Input />
-              </Form.Item>
-            </Col>
-            <Col span={4} offset={1} pull={1}>
-              <Form.Item name="goodsItem" label="平台商品码-goodsItem" rules={[{ required: true }]}>
-                <Input />
-              </Form.Item>
-            </Col>
-            <Col span={4} offset={1} pull={1}>
-              <Form.Item name="itemPromotionDiscount" label="商品折扣优惠价格-itemPromotionDiscount" rules={[{ required: true }]}>
-                <Input />
-              </Form.Item>
-            </Col>
-            <Col span={9} offset={1} >
-              <Form.Item name="skuCode" label="系统skucode" rules={[{ required: true }]}>
-                <Input />
-              </Form.Item>
-            </Col>
-            <Col span={4} offset={1} pull={1}>
-              <Form.Item name="vatCurrencyCode" label="vat币种-vatCurrencyCode" rules={[{ required: true }]}>
-                <Select />
-              </Form.Item>
-            </Col>
-            <Col span={4} offset={1} pull={1}>
-              <Form.Item name="vatAmount" label="vat增值税(金额)-vatAmount" rules={[{ required: true }]}>
-                <Input />
-              </Form.Item>
-            </Col>
-            <Col span={4} offset={1} >
-              <Form.Item name="goodsFee" label="商品成交费-goodsFee" rules={[{ required: true }]}>
-                <Input />
-              </Form.Item>
-            </Col>
-            <Col span={4} offset={1} >
-              <Form.Item name="combineProducts" label="是否组合商品" rules={[{ required: true }]}>
-                <Select options={[{ label: '是', value: 1 }, { label: '否', value: 0 }]} />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Space>
-            <MinusOutlined rotate={90} className='line' />
-          </Space>
-          <span className="base-info">基础信息-用户信息</span>
-          <Row style={{ marginTop: 20 }}>
-            <Col span={20}>
-              <Form.Item name="buyerName" label="买家姓名" rules={[{ required: true }]}>
-                <Input />
-              </Form.Item>
-            </Col>
-            <Col span={4} offset={1} pull={1}>
-              <Form.Item name="consigneeName" label="收货人姓名" rules={[{ required: true }]}>
-                <Input />
-              </Form.Item>
-            </Col>
-            <Col span={4} offset={1} pull={1}>
-              <Form.Item name="consigneeCountry" label="收货人国家简称" rules={[{ required: true }]}>
-                <Select />
-              </Form.Item>
-            </Col>
-            <Col span={4} offset={1} >
-              <Form.Item name="province" label="省份/直辖市" rules={[{ required: true }]}>
-                <Input />
-              </Form.Item>
-            </Col>
-            <Col span={4} offset={1} >
-              <Form.Item name="city" label="城市" rules={[{ required: true }]}>
-                <Input />
-              </Form.Item>
-            </Col>
-            <Col span={4} offset={1} pull={1}>
-              <Form.Item name="consigneeZipCode" label="收货人邮编" rules={[{ required: true }]}>
-                <Input />
-              </Form.Item>
-            </Col>
-            <Col span={4} offset={1} pull={1}>
-              <Form.Item name="consignee" label="收货人手机号" rules={[{ required: true }]}>
-                <Input />
-              </Form.Item>
-            </Col>
-            <Col span={4} offset={1} >
-              <Form.Item name="consignee" label="收货人邮箱" rules={[{ required: true }]}>
-                <Input />
-              </Form.Item>
-            </Col>
-            <Col span={20}>
-              <Form.Item name="address" label="地址" rules={[{ required: true }]}>
-                <Input />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Space>
-            <MinusOutlined rotate={90} className='line' />
-          </Space>
-          <span className="base-info">基础信息-店铺信息</span>
-          <Row style={{ marginTop: 20 }}>
-            <Col span={20}>
-              <Form.Item name="shopName" label="店铺名称" rules={[{ required: true }]}>
-                <Input />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Space>
-            <MinusOutlined rotate={90} className='line' />
+            <MinusOutlined rotate={90} className="line" />
           </Space>
           <span className="base-info">基础信息</span>
           <Row style={{ marginTop: 20 }}>
             <Col md={4}>
               <Form.Item name="salesPlatform" label="销售平台" rules={[{ required: true }]}>
-                <Select />
+                <Select options={salesPlatformOption}/>
               </Form.Item>
             </Col>
             <Col md={{ offset: 1, span: 4 }}>
               <Form.Item name="salesSite" label="销售站点" rules={[{ required: true }]}>
-                <Select />
+                <Select options={salesSiteOption}/>
               </Form.Item>
             </Col>
             <Col md={{ offset: 2, span: 9 }}>
               <Form.Item name="salesModel" label="销售模式" rules={[{ required: true }]}>
-                <Select placeholder="请选择销售模式" onChange={onGenderChange} allowClear>
-                  <Select.Option value="male">male</Select.Option>
-                  <Select.Option value="female">female</Select.Option>
-                  <Select.Option value="other">other</Select.Option>
-                </Select>
+                <Select placeholder="请选择销售模式"  options={salesModelOption}/>
+                
               </Form.Item>
             </Col>
           </Row>
           <Row>
             <Col md={9}>
               <Form.Item name="storeAccount" label="店铺账号" rules={[{ required: true }]}>
-                <Select placeholder="请选择店铺账号" onChange={onGenderChange} allowClear>
-                  <Select.Option value="male">male</Select.Option>
-                  <Select.Option value="female">female</Select.Option>
-                  <Select.Option value="other">other</Select.Option>
-                </Select>
+                <Select placeholder="请选择店铺账号" options={storeAccountOption} allowClear/>
               </Form.Item>
             </Col>
             <Col md={{ offset: 2, span: 9 }}>
-              <Form.Item name="buyer-info" label="买家信息" rules={[{ required: true }]}>
-                <Select placeholder="请选择买家信息" onChange={onGenderChange} allowClear>
-                  <Select.Option value="male">male</Select.Option>
-                  <Select.Option value="female">female</Select.Option>
-                  <Select.Option value="other">other</Select.Option>
-                </Select>
+              <Form.Item name="buyerInfo" label="买家信息" rules={[{ required: true }]}>
+                <Select placeholder="请选择买家信息" options={buyerInfoOption}/>
               </Form.Item>
             </Col>
           </Row>
           <Space>
-            <MinusOutlined rotate={90} className='line' />
+            <MinusOutlined rotate={90} className="line" />
           </Space>
           <span className="base-info">订单信息</span>
           <Row style={{ marginTop: 20 }}>
@@ -225,11 +102,7 @@ const CreateOrder = () => {
                 label="订单币种-currencyType"
                 rules={[{ required: true }]}
               >
-                <Select placeholder="默认为站点币种，可选择" onChange={onGenderChange} allowClear>
-                  <Select.Option value="male">male</Select.Option>
-                  <Select.Option value="female">female</Select.Option>
-                  <Select.Option value="other">other</Select.Option>
-                </Select>
+                <Select placeholder="默认为站点币种，可选择" options={currencyTypeOption}/>
               </Form.Item>
             </Col>
             <Col md={{ offset: 1, span: 4 }}>
@@ -245,32 +118,32 @@ const CreateOrder = () => {
           <Row>
             <Col md={9}>
               <Form.Item
-                name="delivery-company"
+                name="deliveryCompany"
                 label="物流公司-deliveryCompany"
                 rules={[{ required: false }]}
               >
-                <Select placeholder="请选择物流公司" onChange={onGenderChange} allowClear>
-                  <Select.Option value="male">male</Select.Option>
-                  <Select.Option value="female">female</Select.Option>
-                  <Select.Option value="other">other</Select.Option>
-                </Select>
+                <Select placeholder="请选择物流公司"options={deliveryCompanyOption} /> 
               </Form.Item>
             </Col>
             <Col md={{ offset: 2, span: 9 }}>
-              <Form.Item label="最晚发货时间-latestDeliveryTime" rules={[{ required: false }]}>
-              <Space direction="vertical" size={12}>
-      <DatePicker showTime  onOk={onOk} />
-    </Space>
+              <Form.Item
+                label="最晚发货时间-latestDeliveryTime"
+                rules={[{ required: true }]}
+                name="latestDeliveryTime"
+              >
+                <Space direction="vertical" size={12}>
+                  <DatePicker showTime onOk={onOk} />
+                </Space>
               </Form.Item>
             </Col>
           </Row>
           <Space>
-            <MinusOutlined rotate={90} className='line' />
+            <MinusOutlined rotate={90} className="line" />
           </Space>
           <span className="base-info">商品信息</span>
           <Row style={{ marginTop: 20 }}>
             <Col span={20}>
-              <GoodsTable/>
+              <GoodsTable />
             </Col>
           </Row>
         </div>
@@ -287,5 +160,5 @@ const CreateOrder = () => {
       </Form>
     </div>
   );
-}
-export default connect(({ CreateOrder }) => ({ CreateOrder }))(CreateOrder)
+};
+export default connect(({ CreateOrder }) => ({ CreateOrder }))(CreateOrder);

@@ -23,6 +23,7 @@ const proSettings: DefaultSettings = {
   iconfontUrl: '',
 };
 
+
 export type { DefaultSettings };
 
 export default proSettings;
