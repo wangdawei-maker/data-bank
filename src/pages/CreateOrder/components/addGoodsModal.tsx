@@ -2,7 +2,7 @@ import { Modal, Table, Tabs } from 'antd';
 import { useState } from 'react';
 import { connect } from 'umi';
 const data = [
-  {
+  { key:1,
     goodsName: 'sdx',
     goodsSn: '001',
     goodsPrice: '12',
@@ -12,7 +12,7 @@ const data = [
     systemSku: 'systemSku1',
     num: 1,
   },
-  {
+  { key:2,
     goodsName: 'xxxs',
     goodsSn: '002',
     goodsPrice: '112',
@@ -22,7 +22,7 @@ const data = [
     systemSku: 'systemSku2',
     num: 1,
   },
-  {
+  { key:3,
     goodsName: 'oiu',
     goodsSn: '003',
     goodsPrice: '152',

@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 // import type { InputRef } from 'antd';
-import { Button, Form, Input, Popconfirm, Table,InputNumber } from 'antd';
+import { Button, Form, Input, Popconfirm, Table, InputNumber } from 'antd';
 import type { FormInstance } from 'antd/es/form';
 import { connect } from 'umi';
 import AddGoodsModal from './addGoodsModal';
@@ -29,16 +29,7 @@ const EditableRow: React.FC<EditableRowProps> = ({ index, ...props }) => {
   );
 };
 
-interface EditableCellProps {
-  title: React.ReactNode;
-  editable: boolean;
-  children: React.ReactNode;
-  dataIndex: keyof Item;
-  record: Item;
-  handleSave: (record: Item) => void;
-}
-
-const EditableCell: React.FC<EditableCellProps> = ({
+const EditableCell = ({
   title,
   editable,
   children,
@@ -47,26 +38,10 @@ const EditableCell: React.FC<EditableCellProps> = ({
   handleSave,
   ...restProps
 }) => {
-  const [editing, setEditing] = useState(false);
-  const inputRef = useRef<any>(null);
   const form = useContext(EditableContext)!;
-
-  useEffect(() => {
-    if (editing) {
-      inputRef.current!.focus();
-    }
-  }, [editing]);
-
-  const toggleEdit = () => {
-    setEditing(!editing);
-    form.setFieldsValue({ [dataIndex]: record[dataIndex] });
-  };
-
   const save = async () => {
     try {
       const values = await form.validateFields();
-
-      toggleEdit();
       handleSave({ ...record, ...values });
     } catch (errInfo) {
       console.log('Save failed:', errInfo);
@@ -76,7 +51,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
   let childNode = children;
 
   if (editable) {
-    childNode = editing ? (
+    childNode = (
       <Form.Item
         style={{ margin: 0 }}
         name={dataIndex}
@@ -86,14 +61,11 @@ const EditableCell: React.FC<EditableCellProps> = ({
             message: `请输入${title}`,
           },
         ]}
+        initialValue={children[1]}
       >
-        <InputNumber ref={inputRef} onPressEnter={save} onBlur={save} min={0}/>
+        <InputNumber onPressEnter={save} onBlur={save} min={0} />
       </Form.Item>
-    ) : (
-      <div className="editable-cell-value-wrap" style={{ paddingRight: 24 }} onClick={toggleEdit}>
-        {children}
-      </div>
-    );
+    )
   }
 
   return <td {...restProps}>{childNode}</td>;
@@ -103,29 +75,17 @@ type EditableTableProps = Parameters<typeof Table>[0];
 
 type ColumnTypes = Exclude<EditableTableProps['columns'], undefined>;
 
-const GoodsTable: React.FC = (props:any) => {
-  const { addgoddsTable } = props;
-  const [dataSource, setDataSource] = useState([
-    {
-      key: '0',
-      platformSku: 'Edward King 0',
-      systemSku: '32',
-      num: 1,
-    },
-    {
-      key: '1',
-      platformSku: 'Edward King 1',
-      systemSku: '32',
-      num: 2,
-    },
-  ]);
-  const [visible, setVisible] = useState(false);
+const GoodsTable: React.FC = (props: any) => {
+  const { addgoddsTable, dispatch } = props;
+  const [dataSource, setDataSource] = useState<any>([]);
+  const [visible, setVisible] = useState<boolean>(false);
 
   const [count, setCount] = useState(2);
 
   const handleDelete = (key: React.Key) => {
     const newData = dataSource.filter(item => item.key !== key);
     setDataSource(newData);
+    dispatch({ type: 'CreateOrder/save', payload: { addgoddsTable: newData } });
   };
 
   const defaultColumns = [
@@ -165,6 +125,7 @@ const GoodsTable: React.FC = (props:any) => {
       ...item,
       ...row,
     });
+    console.log(newData)
     setDataSource(newData);
   };
 
@@ -190,10 +151,10 @@ const GoodsTable: React.FC = (props:any) => {
       }),
     };
   });
-   
-  useEffect(()=>{
+
+  useEffect(() => {
     setDataSource(addgoddsTable)
-  },[addgoddsTable])
+  }, [addgoddsTable])
 
   return (
     <div>
@@ -214,7 +175,7 @@ const GoodsTable: React.FC = (props:any) => {
         columns={columns as ColumnTypes}
         rowKey={'goodsSn'}
       />
-      <AddGoodsModal visible={visible} setVisible={setVisible} />
+      {visible && <AddGoodsModal visible={visible} setVisible={setVisible} />}
     </div>
   );
 };

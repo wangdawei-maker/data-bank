@@ -26,7 +26,6 @@ const CreateOrder = props => {
   const getSourceEnums = async obj => {
     try {
       let res = await dispatch({ type: 'CreateOrder/asyncSourceEnums', payload: obj });
-      console.log(res);
     } catch (e) {
       console.log(e);
     }

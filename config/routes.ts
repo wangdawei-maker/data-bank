@@ -7,14 +7,39 @@ export default [
       component: '../layouts/BasicLayout',
       routes: [
         {
-          path: './',
-          redirect: './CreateOrder',
+          path: '/',
+          redirect: '/CreateOrder',
         },
         {
-          path: './CreateOrder',
+          path: '/CreateOrder',
           name: '创建订单',
-          title: '欢迎',
+          title: '创建订单',
           component: './CreateOrder',
+        },
+        {
+          path: '/basicInfo',
+          title: '基础信息',
+          name:"基础信息",
+          routes: [
+            {
+              path: '/basicInfo/goodsInfo',
+              title: '商品信息',
+              name:"商品信息",
+              component: './BasicInfo/goodsInfo',
+            },
+            {
+              path: '/basicInfo/shoopInfo',
+              title: '用户信息',
+              name:"用户信息",
+              component: './BasicInfo/shoopInfo',
+            },
+            {
+              path: '/basicInfo/userInfo',
+              title: '店铺信息',
+              name:"店铺信息",
+              component: './BasicInfo/userInfo',
+            },
+          ],
         },
         {
           component: './404',
