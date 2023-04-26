@@ -1,7 +1,20 @@
 import { connect } from "umi"
+import { Button, Table } from 'antd'
+import useTable from "./tabState"
+import { useState } from "react"
+import AddModal from "./addModal"
+const shoopInfo = props => {
+    const [visible, setVisible] = useState<boolean>(false)
 
-const ShoopInfo=props=>{
-   
-    return <div>123</div>
+    const addGoods = () => {
+        setVisible(true)
+    }
+
+
+    return <div>
+        <div style={{ float: 'right', marginBottom: '10px' }}><Button type="primary" onClick={addGoods}>新增</Button></div>
+        <Table dataSource={[]}{...useTable({ type: 'goodsTable' })} scroll={{ x: 1300 }} />
+        {visible && <AddModal visible={visible} setVisible={setVisible} />}
+    </div>
 }
-export default connect(({ShoopInfo})=>({...ShoopInfo}))(ShoopInfo)
+export default connect(({ shoopInfo }) => ({ shoopInfo }))(shoopInfo)

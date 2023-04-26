@@ -13,7 +13,7 @@ const proSettings: DefaultSettings = {
   colorWeak: false,
   menuRender: false,
   splitMenus: false,
-  // headerRender: false,
+  headerRender: false,
   footerRender: false,
   menu: {
     locale: true,

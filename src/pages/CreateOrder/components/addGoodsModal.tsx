@@ -1,8 +1,9 @@
-import { Modal, Table, Tabs } from 'antd';
+import { Button, Modal, Table, Tabs } from 'antd';
 import { useState } from 'react';
 import { connect } from 'umi';
 const data = [
-  { key:1,
+  {
+    key: 1,
     goodsName: 'sdx',
     goodsSn: '001',
     goodsPrice: '12',
@@ -12,7 +13,8 @@ const data = [
     systemSku: 'systemSku1',
     num: 1,
   },
-  { key:2,
+  {
+    key: 2,
     goodsName: 'xxxs',
     goodsSn: '002',
     goodsPrice: '112',
@@ -22,7 +24,8 @@ const data = [
     systemSku: 'systemSku2',
     num: 1,
   },
-  { key:3,
+  {
+    key: 3,
     goodsName: 'oiu',
     goodsSn: '003',
     goodsPrice: '152',
@@ -59,11 +62,13 @@ const AddGoodsModal = props => {
   const { dispatch, visible, setVisible } = props;
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [selectData, setSelectData] = useState<Array<Record<string, any>>>([]);
+  const [tableData, setTableData] = useState<Array<Record<string, any>>>(data);
   const rowSelection = {
     onChange: (newSelectedRowKeys, selectedRows) => {
       setSelectedRowKeys(newSelectedRowKeys);
       setSelectData(selectedRows);
     },
+    preserveSelectedRowKeys: true,
   };
   const items = [
     {
@@ -74,7 +79,7 @@ const AddGoodsModal = props => {
           rowSelection={{ ...rowSelection }}
           columns={columns}
           rowKey={'goodsSn'}
-          dataSource={data}
+          dataSource={tableData}
         />
       ),
     },

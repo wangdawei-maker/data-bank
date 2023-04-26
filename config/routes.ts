@@ -29,14 +29,14 @@ export default [
             },
             {
               path: '/basicInfo/shoopInfo',
-              title: '用户信息',
-              name:"用户信息",
+              title: '店铺信息',
+              name:"店铺信息",
               component: './BasicInfo/shoopInfo',
             },
             {
               path: '/basicInfo/userInfo',
-              title: '店铺信息',
-              name:"店铺信息",
+              title: '用户信息',
+              name:"用户信息",
               component: './BasicInfo/userInfo',
             },
           ],
