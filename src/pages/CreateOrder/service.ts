@@ -63,3 +63,45 @@ export function getShopInfo(data: Record<string, any>) {
     data,
   });
 }
+//添加用户
+export function addUser(data: Record<string, any>) {
+  return request('/user/addUser', {
+    method: 'post',
+    data,
+  });
+}
+//获取国家简称
+export function getNationInfo(data: Record<string, any>) {
+  return request('/user/getNationInfo', {
+    method: 'get',
+    params: data,
+  });
+}
+//新增商品
+export function addItem(data: Record<string, any>) {
+  return request('/item/addItem', {
+    method: 'post',
+    data,
+  });
+}
+//获取商品信息
+export function getItemInfo(data: Record<string, any>) {
+  return request('/item/getItemInfo', {
+    method: 'post',
+    data,
+  });
+}
+//获取平台站点信息
+export function getPlatformSite(data: Record<string, any>) {
+  return request('/base/getPlatformSite', {
+    method: 'get',
+    params: data,
+  });
+}
+//获取订单的所有状态
+export function getOrderStatusInfo(data: Record<string, any>) {
+  return request('/base/getOrderStatusInfo', {
+    method: 'get',
+    params: data,
+  });
+}

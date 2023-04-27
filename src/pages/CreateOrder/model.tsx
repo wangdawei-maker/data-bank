@@ -9,6 +9,12 @@ import {
   getCurrencyTypes,
   addShop,
   getShopInfo,
+  addUser,
+  getNationInfo,
+  addItem,
+  getItemInfo,
+  getPlatformSite,
+  getOrderStatusInfo
 } from './service';
 export type CreateOrder = {
   namespace: 'CreateOrder';
@@ -23,6 +29,12 @@ export type CreateOrder = {
     asyncGetCurrencyTypes: Effect;
     asyncAddShop: Effect;
     asyncGetShopInfo: Effect;
+    asyncAddUser:Effect;
+    asyncGetNationInfo:Effect;
+    asyncAddItem:Effect;
+    asyncGetItemInfo:Effect;
+    asyncGetPlatformSite:Effect
+    asyncGetOrderStatusInfo:Effect
   };
   reducers: {
     save: Reducer;
@@ -110,6 +122,60 @@ const CreateOrder: CreateOrder = {
     *asyncGetShopInfo(action, { call }) {
       try {
         const result = yield call(getShopInfo, action.payload);
+        return result;
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    //新增商品
+    *asyncAddItem(action, { call }) {
+      try {
+        const result = yield call(addItem, action.payload);
+        return result;
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    //添加用户
+    *asyncAddUser(action, { call }) {
+      try {
+        const result = yield call(addUser, action.payload);
+        return result;
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    //获取商品信息
+    *asyncGetItemInfo(action, { call }) {
+      try {
+        const result = yield call(getItemInfo, action.payload);
+        return result;
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    //获取国家简称
+    *asyncGetNationInfo(action, { call }) {
+      try {
+        const result = yield call(getNationInfo, action.payload);
+        return result;
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    //获取订单的所有状态
+    *asyncGetOrderStatusInfo(action, { call }) {
+      try {
+        const result = yield call(getOrderStatusInfo, action.payload);
+        return result;
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    //获取平台站点信息
+    *asyncGetPlatformSite(action, { call }) {
+      try {
+        const result = yield call(getPlatformSite, action.payload);
         return result;
       } catch (e) {
         console.log(e);

@@ -5,7 +5,7 @@ type DefaultSettings = ProSettings & {
 
 const proSettings: DefaultSettings = {
   navTheme: 'dark',
-  primaryColor: '#1890ff',
+  primaryColor: '#f85d18',
   layout: 'top',
   contentWidth: 'Fluid',
   fixedHeader: false,

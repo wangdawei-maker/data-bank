@@ -1,37 +1,37 @@
-import { Button, Modal, Table, Tabs } from 'antd';
-import { useState } from 'react';
+import { Button, Modal, Table, Tabs, message } from 'antd';
+import { useEffect, useState } from 'react';
 import { connect } from 'umi';
 const data = [
   {
     key: 1,
+    id: 1,
     goodsName: 'sdx',
     goodsSn: '001',
     goodsPrice: '12',
     goodsSku: 'vcx',
     goodsItem: 'code1',
-    platformSku: 'sku1',
     systemSku: 'systemSku1',
     num: 1,
   },
   {
     key: 2,
+    id: 2,
     goodsName: 'xxxs',
     goodsSn: '002',
     goodsPrice: '112',
     goodsSku: 'vxx',
     goodsItem: 'code2',
-    platformSku: 'sku2',
     systemSku: 'systemSku2',
     num: 1,
   },
   {
     key: 3,
+    id: 3,
     goodsName: 'oiu',
     goodsSn: '003',
     goodsPrice: '152',
     goodsSku: 'xwx',
     goodsItem: 'code3',
-    platformSku: 'sku3',
     systemSku: 'systemSku3',
     num: 1,
   },
@@ -63,12 +63,17 @@ const AddGoodsModal = props => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [selectData, setSelectData] = useState<Array<Record<string, any>>>([]);
   const [tableData, setTableData] = useState<Array<Record<string, any>>>(data);
+  const [pageData, setPageData] = useState<any>({ current: 1, pageSize: 10 });
   const rowSelection = {
     onChange: (newSelectedRowKeys, selectedRows) => {
       setSelectedRowKeys(newSelectedRowKeys);
       setSelectData(selectedRows);
     },
     preserveSelectedRowKeys: true,
+  };
+  const pageChange = (c, p) => {
+    // setPageData({ ...pageData, current: c, pageSize: p });
+    fetchTableData({ pageNum: c, pageSize: p });
   };
   const items = [
     {
@@ -80,6 +85,12 @@ const AddGoodsModal = props => {
           columns={columns}
           rowKey={'goodsSn'}
           dataSource={tableData}
+          pagination={{
+            onChange: pageChange,
+            current: pageData?.current,
+            pageSize: pageData?.pageSize,
+            total: pageData?.total,
+          }}
         />
       ),
     },
@@ -93,6 +104,22 @@ const AddGoodsModal = props => {
     setVisible(false);
     dispatch({ type: 'CreateOrder/save', payload: { addgoddsTable: selectData } });
   };
+  const fetchTableData = async obj => {
+    try {
+      let res = await dispatch({ type: 'CreateOrder/asyncGetItemInfo', payload: { ...obj } });
+      if (res?.code === 200) {
+        const { pageNum, pageSize, totalSize } = res?.data;
+        setTableData(res?.data?.content);
+        setPageData({ current: pageNum, pageSize: pageSize, total: totalSize });
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  useEffect(() => {
+    fetchTableData({ pageNum: 1, pageSize: 10 });
+  }, []);
 
   return (
     <Modal

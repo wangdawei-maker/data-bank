@@ -65,7 +65,7 @@ const EditableCell = ({
       >
         <InputNumber onPressEnter={save} onBlur={save} min={0} />
       </Form.Item>
-    )
+    );
   }
 
   return <td {...restProps}>{childNode}</td>;
@@ -80,8 +80,6 @@ const GoodsTable: React.FC = (props: any) => {
   const [dataSource, setDataSource] = useState<any>([]);
   const [visible, setVisible] = useState<boolean>(false);
 
-  const [count, setCount] = useState(2);
-
   const handleDelete = (key: React.Key) => {
     const newData = dataSource.filter(item => item.key !== key);
     setDataSource(newData);
@@ -91,27 +89,50 @@ const GoodsTable: React.FC = (props: any) => {
   const defaultColumns = [
     {
       title: '序号',
-      width: '10%',
+      dataIndex: 'key',
     },
     {
-      title: '平台sku',
-      dataIndex: 'platformSku',
+      title: '商品名称',
+      dataIndex: 'goodsName',
+      with: 200,
+    },
+    {
+      title: '商品编号',
+      dataIndex: 'goodsSn',
+      with: 200,
     },
     {
       title: '系统sku',
       dataIndex: 'systemSku',
+      with: 200,
+    },
+    {
+      title: '商品价格',
+      dataIndex: 'goodsPrice',
+      with: 200,
+    },
+    {
+      title: '商品sku',
+      dataIndex: 'goodsSku',
+      with: 200,
+    },
+    {
+      title: '平台商品码',
+      dataIndex: 'goodsItem',
+      with: 200,
     },
     {
       title: '数量',
       dataIndex: 'num',
       editable: true,
+      with: 200,
     },
     {
       title: '操作',
       render: (_, record: { key: React.Key }) =>
         dataSource.length >= 1 ? (
           <Popconfirm title="确定删除?" onConfirm={() => handleDelete(record.key)}>
-            <a>Delete</a>
+            <a>删除</a>
           </Popconfirm>
         ) : null,
     },
@@ -126,6 +147,7 @@ const GoodsTable: React.FC = (props: any) => {
       ...row,
     });
     console.log(newData)
+    dispatch({type:'CreateOrder/save',payload:{addgoddsTable:newData}})
     setDataSource(newData);
   };
 
@@ -153,8 +175,8 @@ const GoodsTable: React.FC = (props: any) => {
   });
 
   useEffect(() => {
-    setDataSource(addgoddsTable)
-  }, [addgoddsTable])
+    setDataSource(addgoddsTable.map((item,index)=>({...item,key:index+1})));
+  }, [addgoddsTable]);
 
   return (
     <div>
@@ -174,6 +196,7 @@ const GoodsTable: React.FC = (props: any) => {
         dataSource={dataSource}
         columns={columns as ColumnTypes}
         rowKey={'goodsSn'}
+        scroll={{ x: 960 }}
       />
       {visible && <AddGoodsModal visible={visible} setVisible={setVisible} />}
     </div>

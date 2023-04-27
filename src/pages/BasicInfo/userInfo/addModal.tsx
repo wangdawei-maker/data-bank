@@ -59,4 +59,4 @@ const AddModal = props => {
   );
 };
 
-export default connect(({ goodsInfo }) => ({ goodsInfo }))(AddModal);
+export default connect(({ CreateOrder }) => ({ ...CreateOrder }))(AddModal);

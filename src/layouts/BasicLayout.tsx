@@ -4,13 +4,17 @@ import ProLayout, { BasicLayoutProps as ProLayoutProps, Settings } from '@ant-de
 import { ConnectState } from '@/models/connect';
 import { Menu } from 'antd';
 import routes from '../../config/routes';
+import {createFromIconfontCN} from '@ant-design/icons'
+const IconFont = createFromIconfontCN({
+  scriptUrl: '//at.alicdn.com/t/c/font_3700257_g8ljkunsdws.js',
+});
 export interface BasicLayoutProps extends ProLayoutProps {
   settings: Settings;
 }
 const BasicLayout: React.FC<BasicLayoutProps> = props => {
   const { children, settings } = props;
   const [selectedKeys, setSelectedKeys] = useState<any>();
-  const [openKeys,setOpenKeys]=useState<any>()
+  const [openKeys,setOpenKeys]=useState<any>('/basicInfo')
   const arr = (routes as any)
     .filter(item => item.path === '/')[0]
     .routes[0]?.routes.filter(item => item.title);
@@ -18,6 +22,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
     for (let i = 0; i < tree.length; i++) {
       tree[i].label = tree[i]?.title;
       tree[i].key = tree[i]?.path;
+      tree[i].icon=<IconFont type="icon-dingdan" />
       if (tree[i].routes) {
         tree[i].children = tree[i].routes;
         addChildren(tree[i].routes);
@@ -60,7 +65,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
         onClick={onClick}
         style={{ width: 180 }}
         selectedKeys={selectedKeys}
-        openKeys={openKeys}
+        defaultOpenKeys={[openKeys]}
         mode="inline"
         items={addChildren(arr)as any}
       />
