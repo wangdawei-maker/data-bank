@@ -1,19 +1,63 @@
 import { connect } from 'umi';
 import { Button, Col, Form, Input, Row, Select, Table } from 'antd';
 import useTable from './tabState';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import AddModal from './addModal';
 const goodsInfo = props => {
+  const { dispatch } = props;
   const [form] = Form.useForm();
   const [visible, setVisible] = useState<boolean>(false);
-
+  const [tableData, setTableData] = useState<any>([]);
+  const [pageData, setPageData] = useState<any>({ current: 1, pageSize: 10 });
+  const [loading, setLoading] = useState(false)
+  const [currencyTypeOption, setcurrencyTypeOption] = useState()
   const addGoods = () => {
     setVisible(true);
   };
   const onFinish = async val => {
     console.log(val);
+    fetchData(val);
   };
-
+  const fetchData = async obj => {
+    try {
+      setLoading(true)
+      let res = await dispatch({
+        type: 'CreateOrder/asyncGetItemInfo',
+        payload: { pageNum: pageData?.current, pageSize: pageData?.pageSize, ...obj },
+      });
+      if (res.code === 200) {
+        const { pageNum, pageSize, totalSize } = res?.data;
+        setTableData(res?.data?.content);
+        setPageData({ current: pageNum, pageSize: pageSize, total: totalSize });
+      }
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setLoading(false)
+    }
+  };
+  //获取订单币种下拉
+  const getCurrencyTypes = async () => {
+    try {
+      let res = await dispatch({ type: 'CreateOrder/asyncGetCurrencyTypes', payload: {} });
+      if (res?.code === 200) {
+        setcurrencyTypeOption(res?.data.map(item => ({ label: item, value: item })));
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  const pageChange = (c, p) => {
+    fetchData({ pageNum: c, pageSize: p });
+  };
+  const reload = () => {
+    let fromval = form.getFieldsValue()
+    fetchData({ ...fromval, pageNum: pageData.current, pageSize: pageData.pageSize })
+  }
+  useEffect(() => {
+    fetchData({ pageNum: 1, pageSize: 10 });
+    getCurrencyTypes()
+  }, []);
   return (
     <div>
       <Form form={form} onFinish={onFinish}>
@@ -95,7 +139,7 @@ const goodsInfo = props => {
               rules={[{ required: false }]}
               labelCol={{ span: 8 }}
             >
-              <Input />
+              <Select options={currencyTypeOption} />
             </Form.Item>
           </Col>
           <Col span={7} offset={1}>
@@ -147,8 +191,18 @@ const goodsInfo = props => {
           新增
         </Button>
       </div>
-      <Table dataSource={[]} {...useTable({ type: 'goodsTable' })} scroll={{ x: 1300 }} />
-      {visible && <AddModal visible={visible} setVisible={setVisible} />}
+      <Table
+        dataSource={tableData}
+        {...useTable({ type: 'goodsTable' })}
+        scroll={{ x: 1300 }}
+        pagination={{
+          onChange: pageChange,
+          current: pageData?.current,
+          pageSize: pageData?.pageSize,
+          total: pageData?.total,
+        }}
+        loading={loading} />
+      {visible && <AddModal visible={visible} setVisible={setVisible} reload={reload} />}
     </div>
   );
 };

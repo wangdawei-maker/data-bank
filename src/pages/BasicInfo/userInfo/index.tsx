@@ -8,8 +8,9 @@ const userInfo = props => {
   const [form] = Form.useForm();
   const [visible, setVisible] = useState<boolean>(false);
   const [tableData, setTableData] = useState<any>([]);
-  const [receiverCountryOption,setReceiverCountryOption] = useState<any>([]);
+  const [receiverCountryOption, setReceiverCountryOption] = useState<any>([]);
   const [pageData, setPageData] = useState<any>({ current: 1, pageSize: 10 });
+  const [loading, setLoading] = useState(false)
   const addGoods = () => {
     setVisible(true);
   };
@@ -19,6 +20,7 @@ const userInfo = props => {
   };
   const fetchData = async obj => {
     try {
+      setLoading(true)
       let res = await dispatch({
         type: 'CreateOrder/asyncGetUserInfo',
         payload: { pageNum: pageData?.current, pageSize: pageData?.pageSize, ...obj },
@@ -30,14 +32,32 @@ const userInfo = props => {
       }
     } catch (e) {
       console.log(e);
+    } finally {
+      setLoading(false)
     }
   };
   const pageChange = (c, p) => {
     fetchData({ pageNum: c, pageSize: p });
   };
+  const getNationInfo = async () => {
+    try {
+      let res = await dispatch({ type: 'CreateOrder/asyncGetNationInfo', payload: {} })
+      if (res?.code === 200) {
+        setReceiverCountryOption(res?.data?.map(item => ({ label: item, value: item })))
+      }
+    }
+    catch (e) {
+      console.log(e)
+    }
+  }
+  const reload=()=>{
+    let fromval=form.getFieldsValue()
+    fetchData({...fromval,pageNum: pageData.current, pageSize: pageData.pageSize})
+  }
 
   useEffect(() => {
     fetchData({ pageNum: 1, pageSize: 10 });
+    getNationInfo()
   }, []);
   return (
     <div>
@@ -70,7 +90,7 @@ const userInfo = props => {
               rules={[{ required: false }]}
               labelCol={{ span: 8 }}
             >
-              <Select options={receiverCountryOption}/>
+              <Select options={receiverCountryOption} />
             </Form.Item>
           </Col>
           <Col span={6}>
@@ -162,8 +182,9 @@ const userInfo = props => {
           pageSize: pageData?.pageSize,
           total: pageData?.total,
         }}
+        loading={loading}
       />
-      {visible && <AddModal visible={visible} setVisible={setVisible} />}
+      {visible && <AddModal visible={visible} setVisible={setVisible} reload={reload} receiverCountryOption={receiverCountryOption}/>}
     </div>
   );
 };

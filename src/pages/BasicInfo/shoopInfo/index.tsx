@@ -9,6 +9,7 @@ const shoopInfo = props => {
   const [visible, setVisible] = useState<boolean>(false);
   const [tableData, setTableData] = useState<any>([]);
   const [pageData, setPageData] = useState<any>({ current: 1, pageSize: 10 });
+  const [loading, setLoading] = useState(false)
   const addGoods = () => {
     setVisible(true);
   };
@@ -21,6 +22,7 @@ const shoopInfo = props => {
   };
   const fetchData = async obj => {
     try {
+      setLoading(true)
       let res = await dispatch({
         type: 'CreateOrder/asyncGetShopInfo',
         payload: { pageNum: pageData?.current, pageSize: pageData?.pageSize, ...obj },
@@ -32,8 +34,14 @@ const shoopInfo = props => {
       }
     } catch (e) {
       console.log(e);
+    }finally {
+      setLoading(false)
     }
   };
+  const reload=()=>{
+    let fromval=form.getFieldsValue()
+    fetchData({...fromval,pageNum: pageData.current, pageSize: pageData.pageSize})
+  }
   useEffect(() => {
     fetchData({ pageNum: 1, pageSize: 10 });
   }, []);
@@ -76,8 +84,9 @@ const shoopInfo = props => {
           pageSize: pageData?.pageSize,
           total: pageData?.total,
         }}
+        loading={loading}
       />
-      {visible && <AddModal visible={visible} setVisible={setVisible} />}
+      {visible && <AddModal visible={visible} setVisible={setVisible} reload={reload}/>}
     </div>
   );
 };
