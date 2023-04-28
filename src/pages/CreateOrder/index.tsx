@@ -1,4 +1,16 @@
-import { Button, Col, Form, Input, message, Row, Select, Space, DatePicker, Spin } from 'antd';
+import {
+  Button,
+  Col,
+  Form,
+  Input,
+  message,
+  Row,
+  Select,
+  Space,
+  DatePicker,
+  Spin,
+  Card,
+} from 'antd';
 import { MinusOutlined } from '@ant-design/icons';
 import './index.less';
 import GoodsTable from './components/goodsTable';
@@ -210,122 +222,126 @@ const CreateOrder = props => {
 
   return (
     <div className="creatOrder">
-      <Form form={form} layout="vertical" onFinish={onFinish}>
-        <div style={{ marginLeft: '10%' }}>
-          <Space>
-            <MinusOutlined rotate={90} className="line" />
-          </Space>
-          <span className="base-info">基础信息</span>
-          <Row style={{ marginTop: 20 }}>
-            <Col md={{ span: 9 }}>
-              <Form.Item name="sourceType" label="销售模式" rules={[{ required: true }]}>
-                <Select placeholder="请选择销售模式" options={salesModelOption} />
-              </Form.Item>
-            </Col>
-            <Col md={{ span: 9, offset: 2 }}>
-              <Form.Item name="site" label="销售站点" rules={[{ required: true }]}>
-                <Select options={salesSiteOption} />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row>
-            <Col md={9}>
-              <Form.Item name="shopAccount" label="店铺账号" rules={[{ required: true }]}>
-                <Select
-                  placeholder="请选择店铺账号"
-                  options={storeAccountOption}
-                  allowClear
-                  showSearch
-                  // filterOption={false}
-                  notFoundContent={fetching ? <Spin size="small" /> : null}
-                  onSearch={debounceFetcher}
-                />
-              </Form.Item>
-            </Col>
-            <Col md={{ offset: 2, span: 9 }}>
-              <Form.Item name="userId" label="买家信息" rules={[{ required: true }]}>
-                <Select placeholder="请选择买家信息" options={buyerInfoOption} />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Space>
-            <MinusOutlined rotate={90} className="line" />
-          </Space>
-          <span className="base-info">订单信息</span>
-          <Row style={{ marginTop: 20 }}>
-            <Col md={9}>
-              <Form.Item
-                name="platOrderSn"
-                label="平台订单号-platOrderSn"
-                rules={[{ required: false }, { type: 'string', min: 6 }]}
-              >
-                <Input placeholder="可手输订单，为空时系统随机生成" />
-              </Form.Item>
-            </Col>
-            <Col md={{ offset: 2, span: 4 }}>
-              <Form.Item
-                name="currencyType"
-                label="订单币种-currencyType"
-                rules={[{ required: true }]}
-              >
-                <Select placeholder="默认为站点币种，可选择" options={currencyTypeOption} />
-              </Form.Item>
-            </Col>
-            <Col md={{ offset: 1, span: 4 }}>
-              <Form.Item name="status" label="订单状态-status" rules={[{ required: true }]}>
-                <Select placeholder="请选择订单状态" allowClear options={statusOption} />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row>
-            <Col md={9}>
-              <Form.Item
-                name="deliveryCompany"
-                label="物流公司-deliveryCompany"
-                rules={[{ required: false }]}
-              >
-                <Select placeholder="请选择物流公司" options={deliveryCompanyOption} />
-              </Form.Item>
-            </Col>
-            <Col md={{ span: 4, offset: 2 }}>
-              <Form.Item
-                name="deliveryStore"
-                label="发货仓-deliveryStore"
-                rules={[{ required: false }]}
-              >
-                <Select placeholder="请选择发货仓" options={deliveryStoreOption} />
-              </Form.Item>
-            </Col>
-            <Col md={{ offset: 1, span: 5 }}>
-              <Form.Item
-                label={<div style={{ whiteSpace: 'nowrap' }}>最晚发货时间-latestDeliveryTime</div>}
-                rules={[{ required: true, message: '请选择' }]}
-                name="latestDeliveryTime"
-              >
-                <DatePicker showTime />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Space>
-            <MinusOutlined rotate={90} className="line" />
-          </Space>
-          <span className="base-info">商品信息</span>
-          <Row style={{ marginTop: 20 }}>
-            <Col span={20}>
-              <GoodsTable />
-            </Col>
-          </Row>
-        </div>
-        <div style={{ marginLeft: '45%', marginTop: '20px' }}>
-          <Form.Item>
+      <Card>
+        <Form form={form} layout="vertical" onFinish={onFinish}>
+          <div>
             <Space>
-              <Button type="primary" htmlType="submit" loading={btnLoading}>
-                提交
-              </Button>
+              <MinusOutlined rotate={90} className="line" />
             </Space>
-          </Form.Item>
-        </div>
-      </Form>
+            <span className="base-info">基础信息</span>
+            <Row style={{ marginTop: 20 }} gutter={[90, 0]}>
+              <Col md={{ span: 12 }}>
+                <Form.Item name="sourceType" label="销售模式" rules={[{ required: true }]}>
+                  <Select placeholder="请选择销售模式" options={salesModelOption} />
+                </Form.Item>
+              </Col>
+              <Col md={{ span: 12 }}>
+                <Form.Item name="site" label="销售站点" rules={[{ required: true }]}>
+                  <Select options={salesSiteOption} />
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row gutter={[90, 0]}>
+              <Col md={{ span: 12 }}>
+                <Form.Item name="shopAccount" label="店铺账号" rules={[{ required: true }]}>
+                  <Select
+                    placeholder="请选择店铺账号"
+                    options={storeAccountOption}
+                    allowClear
+                    showSearch
+                    // filterOption={false}
+                    notFoundContent={fetching ? <Spin size="small" /> : null}
+                    onSearch={debounceFetcher}
+                  />
+                </Form.Item>
+              </Col>
+              <Col md={{ span: 12 }}>
+                <Form.Item name="userId" label="买家信息" rules={[{ required: true }]}>
+                  <Select placeholder="请选择买家信息" options={buyerInfoOption} />
+                </Form.Item>
+              </Col>
+            </Row>
+            <Space>
+              <MinusOutlined rotate={90} className="line" />
+            </Space>
+            <span className="base-info">订单信息</span>
+            <Row style={{ marginTop: 20 }} gutter={[90, 0]}>
+              <Col md={{ span: 12 }}>
+                <Form.Item
+                  name="platOrderSn"
+                  label="平台订单号-platOrderSn"
+                  rules={[{ required: false }, { type: 'string', min: 6 }]}
+                >
+                  <Input placeholder="可手输订单，为空时系统随机生成" />
+                </Form.Item>
+              </Col>
+              <Col md={{ span: 6 }}>
+                <Form.Item
+                  name="currencyType"
+                  label="订单币种-currencyType"
+                  rules={[{ required: true }]}
+                >
+                  <Select placeholder="默认为站点币种，可选择" options={currencyTypeOption} />
+                </Form.Item>
+              </Col>
+              <Col md={{ span: 6 }}>
+                <Form.Item name="status" label="订单状态-status" rules={[{ required: true }]}>
+                  <Select placeholder="请选择订单状态" allowClear options={statusOption} />
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row gutter={[90, 0]}>
+              <Col md={{ span: 12 }}>
+                <Form.Item
+                  name="deliveryCompany"
+                  label="物流公司-deliveryCompany"
+                  rules={[{ required: false }]}
+                >
+                  <Select placeholder="请选择物流公司" options={deliveryCompanyOption} />
+                </Form.Item>
+              </Col>
+              <Col md={{ span: 6 }}>
+                <Form.Item
+                  name="deliveryStore"
+                  label="发货仓-deliveryStore"
+                  rules={[{ required: false }]}
+                >
+                  <Select placeholder="请选择发货仓" options={deliveryStoreOption} />
+                </Form.Item>
+              </Col>
+              <Col md={{ span: 6 }}>
+                <Form.Item
+                  label={
+                    <div style={{ whiteSpace: 'nowrap' }}>最晚发货时间-latestDeliveryTime</div>
+                  }
+                  rules={[{ required: true, message: '请选择' }]}
+                  name="latestDeliveryTime"
+                >
+                  <DatePicker showTime  style={{width:'100%'}}/>
+                </Form.Item>
+              </Col>
+            </Row>
+            <Space>
+              <MinusOutlined rotate={90} className="line" />
+            </Space>
+            <span className="base-info">商品信息</span>
+            <Row style={{ marginTop: 20 }}>
+              <Col span={24}>
+                <GoodsTable />
+              </Col>
+            </Row>
+          </div>
+          <div style={{ marginLeft: '45%', marginTop: '20px' }}>
+            <Form.Item>
+              <Space>
+                <Button type="primary" htmlType="submit" loading={btnLoading}>
+                  提交
+                </Button>
+              </Space>
+            </Form.Item>
+          </div>
+        </Form>
+      </Card>
     </div>
   );
 };
