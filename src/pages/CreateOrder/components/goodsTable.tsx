@@ -7,12 +7,6 @@ import AddGoodsModal from './addGoodsModal';
 
 const EditableContext = React.createContext<FormInstance<any> | null>(null);
 
-interface Item {
-  key: string;
-  name: string;
-  age: string;
-  address: string;
-}
 
 interface EditableRowProps {
   index: number;
@@ -146,7 +140,6 @@ const GoodsTable: React.FC = (props: any) => {
       ...item,
       ...row,
     });
-    console.log(newData)
     dispatch({type:'CreateOrder/save',payload:{addgoddsTable:newData}})
     setDataSource(newData);
   };

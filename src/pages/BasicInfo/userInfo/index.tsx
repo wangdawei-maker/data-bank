@@ -174,7 +174,7 @@ const userInfo = props => {
       </div>
       <Table
         dataSource={tableData}
-        {...useTable({ type: 'goodsTable' })}
+        {...useTable({ type: 'userTable' })}
         scroll={{ x: 1300 }}
         pagination={{
           onChange: pageChange,

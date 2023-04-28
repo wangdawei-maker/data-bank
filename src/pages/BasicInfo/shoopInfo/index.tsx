@@ -76,7 +76,7 @@ const shoopInfo = props => {
       </div>
       <Table
         dataSource={tableData}
-        {...useTable({ type: 'goodsTable' })}
+        {...useTable({ type: 'shoopTable' })}
         scroll={{ x: 1300 }}
         pagination={{
           onChange: pageChange,

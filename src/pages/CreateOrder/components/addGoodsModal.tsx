@@ -60,19 +60,16 @@ const AddGoodsModal = props => {
     },
   ];
   const { dispatch, visible, setVisible } = props;
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [selectData, setSelectData] = useState<Array<Record<string, any>>>([]);
   const [tableData, setTableData] = useState<Array<Record<string, any>>>(data);
   const [pageData, setPageData] = useState<any>({ current: 1, pageSize: 10 });
   const rowSelection = {
     onChange: (newSelectedRowKeys, selectedRows) => {
-      setSelectedRowKeys(newSelectedRowKeys);
       setSelectData(selectedRows);
     },
     preserveSelectedRowKeys: true,
   };
   const pageChange = (c, p) => {
-    // setPageData({ ...pageData, current: c, pageSize: p });
     fetchTableData({ pageNum: c, pageSize: p });
   };
   const items = [

@@ -2,7 +2,7 @@
 const useTable = props => {
     const { type } = props
     const TableType = {
-        goodsTable: {
+        userTable: {
             columns: [
                 { title: '买家姓名', index: 'buyerName' },
                 { title: '收货人姓名', index: 'receiverName' },
