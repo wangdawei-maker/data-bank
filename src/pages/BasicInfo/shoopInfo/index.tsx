@@ -51,7 +51,7 @@ const shoopInfo = props => {
       <Form form={form} onFinish={onFinish}>
         <Row>
           <Col span={6}>
-            <Form.Item name={'goodsName'} label="店铺名称">
+            <Form.Item name={'shopAccount'} label="店铺名称">
               <Input />
             </Form.Item>
           </Col>
@@ -77,7 +77,11 @@ const shoopInfo = props => {
       <Table
         dataSource={tableData}
         {...useTable({ type: 'shoopTable' })}
-        scroll={{ x: 1300 }}
+        scroll={{
+          x: useTable({
+            type: 'shoopTable',
+          }).columns.reduce((total, item) => total + item?.width, 0),
+        }}
         pagination={{
           onChange: pageChange,
           current: pageData?.current,

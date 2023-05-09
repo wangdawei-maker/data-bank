@@ -1,41 +1,7 @@
 import { Button, Modal, Table, Tabs, message } from 'antd';
 import { useEffect, useState } from 'react';
 import { connect } from 'umi';
-const data = [
-  {
-    key: 1,
-    id: 1,
-    goodsName: 'sdx',
-    goodsSn: '001',
-    goodsPrice: '12',
-    goodsSku: 'vcx',
-    goodsItem: 'code1',
-    systemSku: 'systemSku1',
-    num: 1,
-  },
-  {
-    key: 2,
-    id: 2,
-    goodsName: 'xxxs',
-    goodsSn: '002',
-    goodsPrice: '112',
-    goodsSku: 'vxx',
-    goodsItem: 'code2',
-    systemSku: 'systemSku2',
-    num: 1,
-  },
-  {
-    key: 3,
-    id: 3,
-    goodsName: 'oiu',
-    goodsSn: '003',
-    goodsPrice: '152',
-    goodsSku: 'xwx',
-    goodsItem: 'code3',
-    systemSku: 'systemSku3',
-    num: 1,
-  },
-];
+
 const AddGoodsModal = props => {
   const columns = [
     {
@@ -61,7 +27,7 @@ const AddGoodsModal = props => {
   ];
   const { dispatch, visible, setVisible } = props;
   const [selectData, setSelectData] = useState<Array<Record<string, any>>>([]);
-  const [tableData, setTableData] = useState<Array<Record<string, any>>>(data);
+  const [tableData, setTableData] = useState<Array<Record<string, any>>>([]);
   const [pageData, setPageData] = useState<any>({ current: 1, pageSize: 10 });
   const rowSelection = {
     onChange: (newSelectedRowKeys, selectedRows) => {

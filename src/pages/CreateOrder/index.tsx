@@ -42,7 +42,7 @@ const CreateOrder = props => {
         if (obj.latestDeliveryTime) {
           obj.latestDeliveryTime = moment(val).format('yyyy-MM-DD HH:mm:ss');
         }
-        obj.itemList = addgoddsTable.map(item => item => ({
+        obj.itemList = addgoddsTable.map(item => ({
           itemId: item?.id,
           itemNum: item?.num,
         }));
@@ -83,7 +83,7 @@ const CreateOrder = props => {
   //根据站点获取用户列表下拉
   const getUserInfoBySite = async (obj: any) => {
     try {
-      form.setFieldValue('buyerInfo', undefined); //每次获取前先清空上一次的买家信息
+      form.setFieldValue('userId', undefined); //每次获取前先清空上一次的买家信息
       let res = await dispatch({ type: 'CreateOrder/asyncGetUserInfoBySite', payload: { ...obj } });
       if (res?.code === 200) {
         let options = res?.data.map(item => ({
@@ -152,7 +152,7 @@ const CreateOrder = props => {
     try {
       let res = await dispatch({ type: 'CreateOrder/asyncGetPlatformSite', payload: { ...obj } });
       if (res?.code === 200) {
-        setSalesSiteOption(res?.data);
+        setSalesSiteOption(res?.data?.map(item => ({ label: item?.citeCn, value: item?.citeEn })));
       } else {
         setSalesSiteOption([]);
       }
@@ -249,7 +249,7 @@ const CreateOrder = props => {
                     options={storeAccountOption}
                     allowClear
                     showSearch
-                    // filterOption={false}
+                    filterOption={false}
                     notFoundContent={fetching ? <Spin size="small" /> : null}
                     onSearch={debounceFetcher}
                   />
@@ -317,7 +317,7 @@ const CreateOrder = props => {
                   rules={[{ required: true, message: '请选择' }]}
                   name="latestDeliveryTime"
                 >
-                  <DatePicker showTime  style={{width:'100%'}}/>
+                  <DatePicker showTime style={{ width: '100%' }} />
                 </Form.Item>
               </Col>
             </Row>

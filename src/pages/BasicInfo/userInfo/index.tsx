@@ -175,7 +175,7 @@ const userInfo = props => {
       <Table
         dataSource={tableData}
         {...useTable({ type: 'userTable' })}
-        scroll={{ x: 1300 }}
+        
         pagination={{
           onChange: pageChange,
           current: pageData?.current,
@@ -183,6 +183,11 @@ const userInfo = props => {
           total: pageData?.total,
         }}
         loading={loading}
+        scroll={{
+          x: useTable({
+            type: 'userTable',
+          }).columns.reduce((total, item) => total + item?.width, 0),
+        }}
       />
       {visible && <AddModal visible={visible} setVisible={setVisible} reload={reload} receiverCountryOption={receiverCountryOption}/>}
     </div>

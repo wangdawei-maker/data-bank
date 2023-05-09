@@ -9,8 +9,8 @@ const goodsInfo = props => {
   const [visible, setVisible] = useState<boolean>(false);
   const [tableData, setTableData] = useState<any>([]);
   const [pageData, setPageData] = useState<any>({ current: 1, pageSize: 10 });
-  const [loading, setLoading] = useState(false)
-  const [currencyTypeOption, setcurrencyTypeOption] = useState()
+  const [loading, setLoading] = useState(false);
+  const [currencyTypeOption, setcurrencyTypeOption] = useState();
   const addGoods = () => {
     setVisible(true);
   };
@@ -20,7 +20,7 @@ const goodsInfo = props => {
   };
   const fetchData = async obj => {
     try {
-      setLoading(true)
+      setLoading(true);
       let res = await dispatch({
         type: 'CreateOrder/asyncGetItemInfo',
         payload: { pageNum: pageData?.current, pageSize: pageData?.pageSize, ...obj },
@@ -33,7 +33,7 @@ const goodsInfo = props => {
     } catch (e) {
       console.log(e);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   };
   //获取订单币种下拉
@@ -51,12 +51,12 @@ const goodsInfo = props => {
     fetchData({ pageNum: c, pageSize: p });
   };
   const reload = () => {
-    let fromval = form.getFieldsValue()
-    fetchData({ ...fromval, pageNum: pageData.current, pageSize: pageData.pageSize })
-  }
+    let fromval = form.getFieldsValue();
+    fetchData({ ...fromval, pageNum: pageData.current, pageSize: pageData.pageSize });
+  };
   useEffect(() => {
     fetchData({ pageNum: 1, pageSize: 10 });
-    getCurrencyTypes()
+    getCurrencyTypes();
   }, []);
   return (
     <div>
@@ -192,16 +192,22 @@ const goodsInfo = props => {
         </Button>
       </div>
       <Table
+        rowKey={'id'}
         dataSource={tableData}
         {...useTable({ type: 'goodsTable' })}
-        scroll={{ x: 1300 }}
         pagination={{
           onChange: pageChange,
           current: pageData?.current,
           pageSize: pageData?.pageSize,
           total: pageData?.total,
         }}
-        loading={loading} />
+        loading={loading}
+        scroll={{
+          x: useTable({
+            type: 'goodsTable',
+          }).columns.reduce((total, item) => total + item?.width, 0),
+        }}
+      />
       {visible && <AddModal visible={visible} setVisible={setVisible} reload={reload} />}
     </div>
   );

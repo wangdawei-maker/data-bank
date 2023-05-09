@@ -70,7 +70,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
         items={addChildren(arr)as any}
       />
       </div>
-      <ProLayout {...props} {...settings} style={{flex:1}}>
+      <ProLayout {...props} {...settings} style={{width:'calc(100vw - 197px)'}}>
         {children}
       </ProLayout>
     </div>

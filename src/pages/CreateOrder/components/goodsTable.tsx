@@ -97,7 +97,7 @@ const GoodsTable: React.FC = (props: any) => {
     },
     {
       title: '系统sku',
-      dataIndex: 'systemSku',
+      dataIndex: 'skuCode',
       with: 200,
     },
     {
