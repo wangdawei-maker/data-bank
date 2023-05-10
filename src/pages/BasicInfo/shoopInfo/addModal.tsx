@@ -7,6 +7,7 @@ const AddModal = props => {
   const sourceType = Form.useWatch('sourceType', form);
   const [salesSiteOption, setSalesSiteOption] = useState<any>([]); //销售站点下拉数据
   const [salesModelOption, setSalesModelOption] = useState<any>([]); //销售模式下拉数据
+  const [platformOption, setPlatformOption] = useState<any>([]); //销售平台下拉数据
   const { visible, setVisible, dispatch, reload } = props;
   const onFinish = async val => {
     try {
@@ -15,6 +16,21 @@ const AddModal = props => {
         message.success('新增成功!');
         reload();
         setVisible(false);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  //获取销售平台(监听销售模式)
+  const getPlatform = async (obj: any) => {
+    form.setFieldValue('platform', undefined);
+    try {
+      let res = await dispatch({ type: 'CreateOrder/asyncGetPlatformSite', payload: { ...obj } });
+      if (res?.code === 200) {
+        let mapdata = [...new Set(res?.data?.map(item => item?.platformName))];
+        setPlatformOption(mapdata?.map(item => ({ label: item, value: item })));
+      } else {
+        setPlatformOption([]);
       }
     } catch (e) {
       console.log(e);
@@ -57,6 +73,7 @@ const AddModal = props => {
   useEffect(() => {
     if (sourceType) {
       getPlatformSite({ sourceType });
+      getPlatform({ sourceType });
     }
   }, [sourceType]);
   useEffect(() => {
@@ -72,19 +89,34 @@ const AddModal = props => {
     >
       <Form layout="vertical" form={form} onFinish={onFinish}>
         <Row>
-          <Col span={9} offset={2}>
-            <Form.Item name="shopAccount" label="店铺名称" rules={[{ required: true }]}>
+          <Col span={4} offset={2}>
+            <Form.Item name="shopAccount" label="店铺账号" rules={[{ required: true }]}>
+              <Input />
+            </Form.Item>
+          </Col>
+          <Col span={4} offset={1}>
+            <Form.Item name="sellingPartId" label="销售方id" rules={[{ required: true }]}>
               <Input />
             </Form.Item>
           </Col>
           <Col span={4} offset={2}>
+            <Form.Item name="prmAccount" label="prm账号" rules={[{ required: true }]}>
+              <Input />
+            </Form.Item>
+          </Col>
+          <Col span={4} offset={1}>
             <Form.Item name="sourceType" label="销售模式" rules={[{ required: true }]}>
               <Select placeholder="请选择销售模式" options={salesModelOption} />
             </Form.Item>
           </Col>
-          <Col span={4} offset={1}>
+          <Col span={4} offset={2}>
             <Form.Item name="site" label="销售站点" rules={[{ required: true }]}>
               <Select options={salesSiteOption} />
+            </Form.Item>
+          </Col>
+          <Col span={4} offset={1}>
+            <Form.Item name="platform" label="销售平台" rules={[{ required: true }]}>
+              <Select options={platformOption} />
             </Form.Item>
           </Col>
         </Row>

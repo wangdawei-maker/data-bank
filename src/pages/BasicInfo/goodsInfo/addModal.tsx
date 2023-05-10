@@ -10,6 +10,7 @@ const AddModal = props => {
   const [salesSiteOption, setSalesSiteOption] = useState<any>([]); //销售站点下拉数据
   const [salesModelOption, setSalesModelOption] = useState<any>([]); //销售模式下拉数据
   const [storeAccountOption, setStoreAccountOption] = useState<any>([]); //店铺账号下拉数据
+  const [platformOption, setPlatformOption] = useState<any>([]); //销售平台下拉数据
   const [fetching, setFetching] = useState(false);
   const onFinish = async val => {
     try {
@@ -67,30 +68,46 @@ const AddModal = props => {
       console.log(e);
     }
   };
-    //搜索文本框值变化时回调
-    const debounceFetcher = async val => {
-      setFetching(true);
+  //搜索文本框值变化时回调
+  const debounceFetcher = async val => {
+    setFetching(true);
+    try {
+      let res = await dispatch({
+        type: 'CreateOrder/asyncGetShopInfo',
+        payload: { shopAccount: val, pageNum: 1, pageSize: 30 },
+      });
+      if (res?.code === 200) {
+        setStoreAccountOption(
+          res?.data?.content?.map(item => ({ ...item, label: item.shopAccount, value: item.id })),
+        );
+      } else {
+      }
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setFetching(false);
+    }
+  };
+    //获取销售平台(监听销售模式)
+    const getPlatform = async (obj: any) => {
+      form.setFieldValue('platform', undefined);
       try {
-        let res = await dispatch({
-          type: 'CreateOrder/asyncGetShopInfo',
-          payload: { shopAccount: val, pageNum: 1, pageSize: 30 },
-        });
+        let res = await dispatch({ type: 'CreateOrder/asyncGetPlatformSite', payload: { ...obj } });
         if (res?.code === 200) {
-          setStoreAccountOption(
-            res?.data?.content?.map(item => ({ ...item, label: item.shopAccount, value: item.id })),
-          );
+          let mapdata = [...new Set(res?.data?.map(item => item?.platformName))];
+          setPlatformOption(mapdata?.map(item => ({ label: item, value: item })));
         } else {
+          setPlatformOption([]);
         }
       } catch (e) {
         console.log(e);
-      } finally {
-        setFetching(false);
       }
     };
   //监听销售模式来获取销售站点下拉列表
   useEffect(() => {
     if (sourceType) {
       getPlatformSite({ sourceType });
+      getPlatform({sourceType})
     }
   }, [sourceType]);
   useEffect(() => {
@@ -195,7 +212,7 @@ const AddModal = props => {
               <InputNumber min={0} style={{ width: '100%' }} />
             </Form.Item>
           </Col>
-          <Col span={4} offset={2} >
+          <Col span={4} offset={2}>
             <Form.Item name="sourceType" label="销售模式" rules={[{ required: true }]}>
               <Select placeholder="请选择销售模式" options={salesModelOption} />
             </Form.Item>
@@ -205,19 +222,29 @@ const AddModal = props => {
               <Select options={salesSiteOption} />
             </Form.Item>
           </Col>
-          <Col span={9}offset={1}>
-                <Form.Item name="storeMail" label="店铺账号" rules={[{ required: true }]}>
-                  <Select
-                    placeholder="请选择店铺账号"
-                    options={storeAccountOption}
-                    allowClear
-                    showSearch
-                    filterOption={false}
-                    notFoundContent={fetching ? <Spin size="small" /> : null}
-                    onSearch={debounceFetcher}
-                  />
-                </Form.Item>
-              </Col>
+          <Col span={9} offset={1}>
+            <Form.Item name="storeMail" label="店铺账号" rules={[{ required: true }]}>
+              <Select
+                placeholder="请选择店铺账号"
+                options={storeAccountOption}
+                allowClear
+                showSearch
+                filterOption={false}
+                notFoundContent={fetching ? <Spin size="small" /> : null}
+                onSearch={debounceFetcher}
+              />
+            </Form.Item>
+          </Col>
+          <Col span={4} offset={2}>
+            <Form.Item name="platType" label="平台类型" rules={[{ required: true }]} initialValue={'scp'}>
+              <Input />
+            </Form.Item>
+          </Col>
+          <Col span={4} offset={1}>
+            <Form.Item name="platform" label="销售平台" rules={[{ required: true }]}>
+              <Select options={platformOption} />
+            </Form.Item>
+          </Col>
         </Row>
       </Form>
     </Modal>
