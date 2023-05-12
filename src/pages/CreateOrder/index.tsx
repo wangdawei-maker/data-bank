@@ -33,6 +33,8 @@ const CreateOrder = props => {
   const [statusOption, setStatusOption] = useState<any>([]); //订单状态下拉数据
   const [fetching, setFetching] = useState(false);
   const [btnLoading, setBtnLoading] = useState(false);
+  const [firstFlage, setFirstFlage] = useState(true);
+  const [firstRender, setFirstRender] = useState(true);
   //表单提交
   const onFinish = async val => {
     try {
@@ -83,8 +85,7 @@ const CreateOrder = props => {
   //根据站点获取用户列表下拉
   const getUserInfoBySite = async (obj: any) => {
     try {
-      form.setFieldValue('userId', undefined); //每次获取前先清空上一次的买家信息
-      let res = await dispatch({ type: 'CreateOrder/asyncGetUserInfoBySite', payload: { ...obj } });
+      let res = await dispatch({ type: 'CreateOrder/asyncGetUserInfoBySite', payload: { ...obj,site } });
       if (res?.code === 200) {
         let options = res?.data.map(item => ({
           ...item,
@@ -112,7 +113,7 @@ const CreateOrder = props => {
   };
   //获取物流公司下拉(监听销售模式)
   const getDfDeliveryCompany = async (obj: any) => {
-    form.setFieldValue('deliveryCompany', undefined);
+    // form.setFieldValue('deliveryCompany', undefined);
     try {
       let res = await dispatch({
         type: 'CreateOrder/asyncGetDfDeliveryCompany',
@@ -130,7 +131,7 @@ const CreateOrder = props => {
   };
   //获取发货仓下拉(监听销售模式)
   const getDfDeliveryStore = async (obj: any) => {
-    form.setFieldValue('deliveryStore', undefined);
+    // form.setFieldValue('deliveryStore', undefined);
     try {
       let res = await dispatch({
         type: 'CreateOrder/asyncGetDfDeliveryStore',
@@ -148,7 +149,7 @@ const CreateOrder = props => {
   };
   //获取销售站点(监听销售模式)
   const getPlatformSite = async (obj: any) => {
-    form.setFieldValue('site', undefined);
+    // form.setFieldValue('site', undefined);
     try {
       let res = await dispatch({ type: 'CreateOrder/asyncGetPlatformSite', payload: { ...obj } });
       if (res?.code === 200) {
@@ -163,6 +164,7 @@ const CreateOrder = props => {
   //搜索文本框值变化时回调
   const debounceFetcher = async val => {
     setFetching(true);
+    localStorage.setItem('searchval', val);
     try {
       let res = await dispatch({
         type: 'CreateOrder/asyncGetShopInfo',
@@ -196,6 +198,12 @@ const CreateOrder = props => {
       console.log(e);
     }
   };
+  const onFieldsChange = (changedFields, allFields) => {
+    let formval = form.getFieldsValue();
+    console.log(formval);
+    let formsrting = JSON.stringify(formval);
+    localStorage.setItem('formval', formsrting);
+  };
   //获取页面需要的下拉数据
   const getDefultSelect = () => {
     getSourceEnums({});
@@ -205,12 +213,27 @@ const CreateOrder = props => {
   //监听站点数据来获取买家信息下拉列表
   useEffect(() => {
     if (site) {
+      if (firstRender) {
+        setFirstRender(false);
+      } else {
+        form.setFieldValue('userId', undefined); //每次获取前先清空上一次的买家信息
+      }
+
       getUserInfoBySite({ site });
     }
   }, [site]);
   //监听销售模式来获取销售站点下拉列表
   useEffect(() => {
+    console.log(sourceType);
     if (sourceType) {
+      if (firstFlage) {
+        setFirstFlage(false);
+      } else {
+        console.log('修改');
+        form.setFieldValue('site', undefined);
+        form.setFieldValue('deliveryCompany', undefined);
+        form.setFieldValue('deliveryStore', undefined);
+      }
       getPlatformSite({ sourceType });
       getDfDeliveryCompany({ sourceType });
       getDfDeliveryStore({ sourceType });
@@ -218,12 +241,26 @@ const CreateOrder = props => {
   }, [sourceType]);
   useEffect(() => {
     getDefultSelect();
+    if (localStorage.getItem('formval') as any) {
+      let formval = JSON.parse(localStorage.getItem('formval') as any);
+      if (formval) {
+        if (formval?.latestDeliveryTime) {
+          formval.latestDeliveryTime = moment(formval?.latestDeliveryTime);
+        }
+        if(formval?.shopAccount){
+          let searchval=localStorage.getItem('searchval')
+          debounceFetcher(searchval)
+        }
+        console.log(formval);
+        form.setFieldsValue(formval);
+      }
+    }
   }, []);
 
   return (
     <div className="creatOrder">
       <Card>
-        <Form form={form} layout="vertical" onFinish={onFinish}>
+        <Form form={form} layout="vertical" onFinish={onFinish} onFieldsChange={onFieldsChange}>
           <div>
             <Space>
               <MinusOutlined rotate={90} className="line" />
@@ -256,7 +293,7 @@ const CreateOrder = props => {
                 </Form.Item>
               </Col>
               <Col md={{ span: 12 }}>
-                <Form.Item name="userId" label="买家信息" rules={[{ required: true }]}>
+                <Form.Item name="userId" label="买家信息" rules={[{ required: true }]} shouldUpdate>
                   <Select placeholder="请选择买家信息" options={buyerInfoOption} />
                 </Form.Item>
               </Col>

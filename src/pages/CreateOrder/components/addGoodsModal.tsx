@@ -88,7 +88,7 @@ const AddGoodsModal = props => {
     <Modal
       open={visible}
       onCancel={() => setVisible(false)}
-      title="选择引用数据"
+      title="新增商品"
       width={1000}
       onOk={submit}
     >
