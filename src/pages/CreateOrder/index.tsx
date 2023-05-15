@@ -48,11 +48,12 @@ const CreateOrder = props => {
           itemId: item?.id,
           itemNum: item?.num,
         }));
-        let res = await dispatch({ type: 'CreateOrder/asyncCreateOrder', payload: { ...obj } });
-        if (res?.code === 200) {
-          message.success('创建成功!');
-          form.resetFields();
-        }
+        console.log(obj)
+        // let res = await dispatch({ type: 'CreateOrder/asyncCreateOrder', payload: { ...obj } });
+        // if (res?.code === 200) {
+        //   message.success('创建成功!');
+        //   form.resetFields();
+        // }
       } else {
         message.warn('请完善商品信息');
       }
@@ -68,14 +69,10 @@ const CreateOrder = props => {
     try {
       let res = await dispatch({ type: 'CreateOrder/asyncSourceEnums', payload: obj });
       if (res?.code === 200) {
-        //这里拿到的map格式需要转化成option需要的array形式
-        let data: object = res?.data;
-        let array: Array<{ label: any; value: any }> = [];
+        let data: any = res?.data;
         if (data) {
-          for (let i in data) {
-            array.push({ label: data[i], value: i });
-          }
-          setSalesModelOption(array);
+        
+          setSalesModelOption(data.map(item=>({label:item.platform,value:item.sourceType})));
         }
       }
     } catch (e) {

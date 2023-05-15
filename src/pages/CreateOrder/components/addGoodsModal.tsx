@@ -25,15 +25,18 @@ const AddGoodsModal = props => {
       dataIndex: 'goodsItem',
     },
   ];
-  const { dispatch, visible, setVisible } = props;
+  const { dispatch, visible, setVisible ,addgoddsTable} = props;
   const [selectData, setSelectData] = useState<Array<Record<string, any>>>([]);
   const [tableData, setTableData] = useState<Array<Record<string, any>>>([]);
   const [pageData, setPageData] = useState<any>({ current: 1, pageSize: 10 });
+  const [selectedRowKeys,setSelectedRowKeys]=useState<any>([])
   const rowSelection = {
     onChange: (newSelectedRowKeys, selectedRows) => {
       setSelectData(selectedRows);
+      setSelectedRowKeys(newSelectedRowKeys)
     },
     preserveSelectedRowKeys: true,
+    selectedRowKeys:selectedRowKeys
   };
   const pageChange = (c, p) => {
     fetchTableData({ pageNum: c, pageSize: p });
@@ -46,7 +49,7 @@ const AddGoodsModal = props => {
         <Table
           rowSelection={{ ...rowSelection }}
           columns={columns}
-          rowKey={'goodsSn'}
+          rowKey={'id'}
           dataSource={tableData}
           pagination={{
             onChange: pageChange,
@@ -60,12 +63,12 @@ const AddGoodsModal = props => {
     {
       key: '2',
       label: `已选`,
-      children: <Table columns={columns} dataSource={selectData} rowKey={'goodsSn'} />,
+      children: <Table columns={columns} dataSource={selectData} rowKey={'id'} />,
     },
   ];
   const submit = () => {
     setVisible(false);
-    dispatch({ type: 'CreateOrder/save', payload: { addgoddsTable: selectData } });
+    dispatch({ type: 'CreateOrder/save', payload: { addgoddsTable: selectData.map(item=>({...item,num:1})) } });
   };
   const fetchTableData = async obj => {
     try {
@@ -82,6 +85,11 @@ const AddGoodsModal = props => {
 
   useEffect(() => {
     fetchTableData({ pageNum: 1, pageSize: 10 });
+    if(addgoddsTable){
+      setSelectedRowKeys(addgoddsTable.map(item=>item?.id))
+      setSelectData(addgoddsTable)
+    }
+   
   }, []);
 
   return (
