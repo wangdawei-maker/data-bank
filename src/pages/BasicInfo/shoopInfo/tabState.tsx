@@ -6,8 +6,10 @@ const useTable = props => {
         shoopTable: {
             columns: [
                 { title: '店铺账号', dataIndex: 'shopAccount' ,width:200},
-                { title: '平台', dataIndex: 'platform' ,width:200},
-                { title: '站点', dataIndex: 'site' ,width:200},
+                { title: '销售方id', dataIndex: 'platform' ,width:200},
+                { title: 'prm账号', dataIndex: 'prmAccount' ,width:200},
+                { title: '销售模式', dataIndex: 'sourceModel' ,width:200},
+                { title: '销售站点', dataIndex: 'site' ,width:200},
                 { title: '更新时间', dataIndex: 'gmtModified',width:200,render:(txt)=>{
                     if(txt){
                         return moment(txt).format('YYYY-MM-DD')

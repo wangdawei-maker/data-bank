@@ -1,28 +1,61 @@
-import { Button, Modal, Table, Tabs, message } from 'antd';
+import { Modal, Table, Tabs, Tooltip } from 'antd';
 import { useEffect, useState } from 'react';
 import { connect } from 'umi';
 
 const AddGoodsModal = props => {
   const columns = [
     {
-      title: '商品名称-goodsName',
+      title: '商品名称',
       dataIndex: 'goodsName',
+      ellipsis: {
+        showTitle: false,
+      },
+      render: (address) => (
+        <Tooltip placement="topLeft" title={address}>
+          {address}
+        </Tooltip>
+      ),
     },
     {
-      title: '商品编号-goodsSn',
+      title: '商品编号',
       dataIndex: 'goodsSn',
+      ellipsis: {
+        showTitle: false,
+      },
+      render: (address) => (
+        <Tooltip placement="topLeft" title={address}>
+          {address}
+        </Tooltip>
+      ),
     },
     {
-      title: '商品价格-goodsPrice',
+      title: '商品价格',
       dataIndex: 'goodsPrice',
+      with:20,
     },
     {
-      title: '商品sku-goodsSku',
+      title: '商品sku',
       dataIndex: 'goodsSku',
+      ellipsis: {
+        showTitle: false,
+      },
+      render: (address) => (
+        <Tooltip placement="topLeft" title={address}>
+          {address}
+        </Tooltip>
+      ),
     },
     {
-      title: '平台商品码-goodsItem',
+      title: '平台商品码',
       dataIndex: 'goodsItem',
+      ellipsis: {
+        showTitle: false,
+      },
+      render: (address) => (
+        <Tooltip placement="topLeft" title={address}>
+          {address}
+        </Tooltip>
+      ),
     },
   ];
   const { dispatch, visible, setVisible ,addgoddsTable} = props;

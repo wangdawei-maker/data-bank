@@ -14,7 +14,8 @@ import {
   addItem,
   getItemInfo,
   getPlatformSite,
-  getOrderStatusInfo
+  getOrderStatusInfo,
+  getShopInfoBySelective,
 } from './service';
 export type CreateOrder = {
   namespace: 'CreateOrder';
@@ -33,8 +34,9 @@ export type CreateOrder = {
     asyncGetNationInfo:Effect;
     asyncAddItem:Effect;
     asyncGetItemInfo:Effect;
-    asyncGetPlatformSite:Effect
-    asyncGetOrderStatusInfo:Effect
+    asyncGetPlatformSite:Effect;
+    asyncGetOrderStatusInfo:Effect;
+    asyncGetShopInfoBySelective:Effect;
   };
   reducers: {
     save: Reducer;
@@ -104,6 +106,15 @@ const CreateOrder: CreateOrder = {
     *asyncGetCurrencyTypes(action, { call }) {
       try {
         const result = yield call(getCurrencyTypes, action.payload);
+        return result;
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    //条件查询店铺信息
+    *asyncGetShopInfoBySelective(action, { call }) {
+      try {
+        const result = yield call(getShopInfoBySelective, action.payload);
         return result;
       } catch (e) {
         console.log(e);

@@ -62,7 +62,7 @@ const goodsInfo = props => {
     <div>
       <Form form={form} onFinish={onFinish}>
         <Row>
-          <Col span={6}>
+          <Col span={7}>
             <Form.Item
               name="goodsName"
               label="商品名称"
@@ -82,17 +82,7 @@ const goodsInfo = props => {
               <Input />
             </Form.Item>
           </Col>
-          <Col span={7} offset={1}>
-            <Form.Item
-              name="goodsTotalPrice"
-              label="商品价格"
-              rules={[{ required: false }]}
-              labelCol={{ span: 8 }}
-            >
-              <Input />
-            </Form.Item>
-          </Col>
-          <Col span={6}>
+          <Col span={7}>
             <Form.Item
               name="goodsSku"
               label="商品sku"
@@ -102,7 +92,7 @@ const goodsInfo = props => {
               <Input />
             </Form.Item>
           </Col>
-          <Col span={7} offset={1}>
+          <Col span={7} >
             <Form.Item
               name="goodsItem"
               label="平台商品码"
@@ -114,16 +104,6 @@ const goodsInfo = props => {
           </Col>
           <Col span={7} offset={1}>
             <Form.Item
-              name="itemPromotionDiscount"
-              label="商品折扣优惠价格"
-              rules={[{ required: false }]}
-              labelCol={{ span: 8 }}
-            >
-              <Input />
-            </Form.Item>
-          </Col>
-          <Col span={6}>
-            <Form.Item
               name="skuCode"
               label="系统skucode"
               rules={[{ required: false }]}
@@ -132,47 +112,28 @@ const goodsInfo = props => {
               <Input />
             </Form.Item>
           </Col>
-          <Col span={7} offset={1}>
+          <Col span={7} >
             <Form.Item
               name="vatCurrencyCode"
               label="vat币种"
               rules={[{ required: false }]}
               labelCol={{ span: 8 }}
             >
-              <Select options={currencyTypeOption} />
+              <Select options={currencyTypeOption} allowClear/>
             </Form.Item>
           </Col>
-          <Col span={7} offset={1}>
-            <Form.Item
-              name="vatAmount"
-              label="vat增值税(金额)"
-              rules={[{ required: false }]}
-              labelCol={{ span: 8 }}
-            >
-              <Input />
-            </Form.Item>
-          </Col>
-          <Col span={6}>
-            <Form.Item
-              name="goodsFee"
-              label="商品成交费"
-              rules={[{ required: false }]}
-              labelCol={{ span: 8 }}
-            >
-              <Input />
-            </Form.Item>
-          </Col>
-          <Col span={7} offset={1}>
-            <Form.Item name="combineProducts" label="是否组合商品" labelCol={{ span: 8 }}>
+          <Col span={7} >
+            <Form.Item name="isCombination" label="是否组合商品" labelCol={{ span: 8 }} >
               <Select
                 options={[
                   { label: '是', value: 1 },
                   { label: '否', value: 0 },
                 ]}
+                allowClear
               />
             </Form.Item>
           </Col>
-          <Col offset={5}>
+          <Col offset={11}>
             <Form.Item>
               <Button htmlType="submit" type="primary">
                 查询

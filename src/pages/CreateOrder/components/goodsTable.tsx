@@ -1,6 +1,6 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 // import type { InputRef } from 'antd';
-import { Button, Form, Input, Popconfirm, Table, InputNumber } from 'antd';
+import { Button, Form, Popconfirm, Table, InputNumber,Tooltip } from 'antd';
 import type { FormInstance } from 'antd/es/form';
 import { connect } from 'umi';
 import AddGoodsModal from './addGoodsModal';
@@ -55,10 +55,11 @@ const EditableCell = ({
             message: `请输入${title}`,
           },
         ]}
-        initialValue={children[1]}
+        // initialValue={children[1]}
+        initialValue={1}
       >
-        <InputNumber onPressEnter={save} onBlur={save} min={0} />
-      </Form.Item>
+        <InputNumber onPressEnter={save} onBlur={save} min={1} />
+      </Form.Item >
     );
   }
 
@@ -70,7 +71,7 @@ type EditableTableProps = Parameters<typeof Table>[0];
 type ColumnTypes = Exclude<EditableTableProps['columns'], undefined>;
 
 const GoodsTable: React.FC = (props: any) => {
-  const { addgoddsTable, dispatch } = props;
+  const { addgoddsTable, dispatch,orderForm } = props;
   const [dataSource, setDataSource] = useState<any>([]);
   const [visible, setVisible] = useState<boolean>(false);
 
@@ -84,6 +85,7 @@ const GoodsTable: React.FC = (props: any) => {
     {
       title: '序号',
       dataIndex: 'key',
+      with: 200,
     },
     {
       title: '商品名称',
@@ -94,11 +96,20 @@ const GoodsTable: React.FC = (props: any) => {
       title: '商品编号',
       dataIndex: 'goodsSn',
       with: 200,
+      ellipsis: {
+        showTitle: false,
+      },
+      render: (address) => (
+        <Tooltip placement="topLeft" title={address}>
+          {address}
+        </Tooltip>
+      ),
     },
     {
       title: '系统sku',
       dataIndex: 'skuCode',
       with: 200,
+      
     },
     {
       title: '商品价格',
@@ -109,6 +120,14 @@ const GoodsTable: React.FC = (props: any) => {
       title: '商品sku',
       dataIndex: 'goodsSku',
       with: 200,
+      ellipsis: {
+        showTitle: false,
+      },
+      render: (address) => (
+        <Tooltip placement="topLeft" title={address}>
+          {address}
+        </Tooltip>
+      ),
     },
     {
       title: '平台商品码',
@@ -191,7 +210,7 @@ const GoodsTable: React.FC = (props: any) => {
         rowKey={'goodsSn'}
         scroll={{ x: 960 }}
       />
-      {visible && <AddGoodsModal visible={visible} setVisible={setVisible} />}
+      {visible && <AddGoodsModal visible={visible} setVisible={setVisible} orderForm={orderForm}/>}
     </div>
   );
 };

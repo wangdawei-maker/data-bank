@@ -7,7 +7,7 @@ const AddModal = props => {
   const sourceType = Form.useWatch('sourceType', form);
   const [salesSiteOption, setSalesSiteOption] = useState<any>([]); //销售站点下拉数据
   const [salesModelOption, setSalesModelOption] = useState<any>([]); //销售模式下拉数据
-  const [platformOption, setPlatformOption] = useState<any>([]); //销售平台下拉数据
+  // const [platformOption, setPlatformOption] = useState<any>([]); //销售平台下拉数据
   const { visible, setVisible, dispatch, reload } = props;
   const onFinish = async val => {
     try {
@@ -22,27 +22,27 @@ const AddModal = props => {
     }
   };
   //获取销售平台(监听销售模式)
-  const getPlatform = async (obj: any) => {
-    form.setFieldValue('platform', undefined);
-    try {
-      let res = await dispatch({ type: 'CreateOrder/asyncGetPlatformSite', payload: { ...obj } });
-      if (res?.code === 200) {
-        let mapdata = [...new Set(res?.data?.map(item => item?.platformName))];
-        setPlatformOption(mapdata?.map(item => ({ label: item, value: item })));
-      } else {
-        setPlatformOption([]);
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  };
+  // const getPlatform = async (obj: any) => {
+  //   form.setFieldValue('platform', undefined);
+  //   try {
+  //     let res = await dispatch({ type: 'CreateOrder/asyncGetPlatformSite', payload: { ...obj } });
+  //     if (res?.code === 200) {
+  //       let mapdata = [...new Set(res?.data?.map(item => item?.platformName))];
+  //       setPlatformOption(mapdata?.map(item => ({ label: item, value: item })));
+  //     } else {
+  //       setPlatformOption([]);
+  //     }
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // };
   //获取销售站点(监听销售模式)
   const getPlatformSite = async (obj: any) => {
     form.setFieldValue('site', undefined);
     try {
       let res = await dispatch({ type: 'CreateOrder/asyncGetPlatformSite', payload: { ...obj } });
       if (res?.code === 200) {
-        setSalesSiteOption(res?.data?.map(item => ({ label: item?.citeCn, value: item?.citeEn })));
+        setSalesSiteOption(res?.data?.map(item => ({ label: item?.citeEn, value: item?.citeEn })));
       } else {
         setSalesSiteOption([]);
       }
@@ -55,15 +55,7 @@ const AddModal = props => {
     try {
       let res = await dispatch({ type: 'CreateOrder/asyncSourceEnums', payload: obj });
       if (res?.code === 200) {
-        //这里拿到的map格式需要转化成option需要的array形式
-        let data: object = res?.data;
-        let array: Array<{ label: any; value: any }> = [];
-        if (data) {
-          for (let i in data) {
-            array.push({ label: data[i], value: i });
-          }
-          setSalesModelOption(array);
-        }
+        setSalesModelOption(res?.data.map(item => ({ label: item?.platform, value:item?.sourceType })));
       }
     } catch (e) {
       console.log(e);
@@ -73,7 +65,7 @@ const AddModal = props => {
   useEffect(() => {
     if (sourceType) {
       getPlatformSite({ sourceType });
-      getPlatform({ sourceType });
+      // getPlatform({ sourceType });
     }
   }, [sourceType]);
   useEffect(() => {
@@ -89,36 +81,36 @@ const AddModal = props => {
     >
       <Form layout="vertical" form={form} onFinish={onFinish}>
         <Row>
-          <Col span={4} offset={2}>
+          <Col span={8} offset={2}>
             <Form.Item name="shopAccount" label="店铺账号" rules={[{ required: true }]}>
-              <Input />
+              <Input placeholder="请输入店铺账号"/>
             </Form.Item>
           </Col>
-          <Col span={4} offset={1}>
+          <Col span={8} offset={1}>
             <Form.Item name="sellingPartId" label="销售方id" rules={[{ required: true }]}>
-              <Input />
+              <Input placeholder="请输入销售方id"/>
             </Form.Item>
           </Col>
-          <Col span={4} offset={2}>
+          <Col span={8} offset={2}>
             <Form.Item name="prmAccount" label="prm账号" rules={[{ required: true }]}>
-              <Input />
+              <Input placeholder="请输入prm账号"/>
             </Form.Item>
           </Col>
-          <Col span={4} offset={1}>
+          <Col span={8} offset={1}>
             <Form.Item name="sourceType" label="销售模式" rules={[{ required: true }]}>
-              <Select placeholder="请选择销售模式" options={salesModelOption} />
+              <Select placeholder="请选择销售模式" options={salesModelOption} allowClear/>
             </Form.Item>
           </Col>
-          <Col span={4} offset={2}>
+          <Col span={8} offset={2}>
             <Form.Item name="site" label="销售站点" rules={[{ required: true }]}>
-              <Select options={salesSiteOption} />
+              <Select placeholder="请选择销售站点" options={salesSiteOption} allowClear/>
             </Form.Item>
           </Col>
-          <Col span={4} offset={1}>
+          {/* <Col span={4} offset={1}>
             <Form.Item name="platform" label="销售平台" rules={[{ required: true }]}>
               <Select options={platformOption} />
             </Form.Item>
-          </Col>
+          </Col> */}
         </Row>
       </Form>
     </Modal>

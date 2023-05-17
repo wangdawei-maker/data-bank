@@ -19,6 +19,7 @@ export function getUserInfoBySite(data: Record<string, any>) {
   return request('/candy/user/getUserInfoBySite', {
     method: 'post',
     data,
+    requestType:'form'
   });
 }
 //获取所有用户列表 
@@ -48,6 +49,14 @@ export function getCurrencyTypes(data: Record<string, any>) {
   return request('/candy/base/getCurrencyTypes', {
     method: 'get',
     params: data,
+  });
+}
+//条件查询店铺信息
+export function getShopInfoBySelective(data: Record<string, any>) {
+  return request('/candy/shop/getShopInfoBySelective', {
+    method: 'post',
+    data,
+    requestType:'form'
   });
 }
 //新增店铺
