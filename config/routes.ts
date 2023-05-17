@@ -18,6 +18,12 @@ export default [
           component: './CreateOrder',
         },
         {
+          path: '/OrderManager',
+          name: '订单列表',
+          title: '订单列表',
+          component: './OrderManager',
+        },
+        {
           path: '/basicInfo',
           title: '基础信息',
           name:"基础信息",
