@@ -55,10 +55,10 @@ const CreateOrder = props => {
             content: res?.data?.platOrderSn,
           });
           form.resetFields();
-        }    
-       } else {
-        message.error("请补充商品信息");
-      }  
+        }
+      } else {
+        message.error('请补充商品信息');
+      }
     } catch (e) {
       console.log(e);
     } finally {
@@ -230,6 +230,18 @@ const CreateOrder = props => {
     let formsrting = JSON.stringify(formval);
     localStorage.setItem('formval', formsrting);
   };
+  const isDf = val => {
+    try {
+      const label = salesModelOption?.filter(ele => ele.value === val)[0]?.label;
+      const model = label?.split('_');
+      if (model[1] && model[1] === 'DF') {
+        return true;
+      }
+    } catch (e) {
+      console.log(e);
+    }
+      return false;
+  };
   //获取页面需要的下拉数据
   const getDefultSelect = () => {
     getSourceEnums({});
@@ -252,12 +264,10 @@ const CreateOrder = props => {
   }, [site]);
   //监听销售模式来获取销售站点下拉列表
   useEffect(() => {
-    console.log(sourceType);
     if (sourceType) {
       if (firstFlage) {
         setFirstFlage(false);
       } else {
-        console.log('修改');
         form.setFieldValue('site', undefined);
         form.setFieldValue('deliveryCompany', undefined);
         form.setFieldValue('deliveryStore', undefined);
@@ -370,26 +380,34 @@ const CreateOrder = props => {
               </Col>
             </Row>
             <Row gutter={[90, 0]}>
-              <Col md={{ span: 12 }}>
-                <Form.Item
-                  name="deliveryCompany"
-                  label="物流公司-deliveryCompany"
-                  rules={[{ required: false }]}
-                >
-                  <Select placeholder="请选择物流公司" options={deliveryCompanyOption} allowClear />
-                </Form.Item>
-              </Col>
+              {isDf(sourceType) && (
+                <Col md={{ span: 12 }}>
+                  <Form.Item
+                    name="deliveryCompany"
+                    label="物流公司-deliveryCompany"
+                    rules={[{ required: true, message: '请选择' }]}
+                  >
+                    <Select
+                      placeholder="请选择物流公司"
+                      options={deliveryCompanyOption}
+                      allowClear
+                    />
+                  </Form.Item>
+                </Col>
+              )}
+              {isDf(sourceType) && (
+                <Col md={{ span: 6 }}>
+                  <Form.Item
+                    name="deliveryStore"
+                    label="发货仓-deliveryStore"
+                    rules={[{ required: true, message: '请选择' }]}
+                  >
+                    <Select placeholder="请选择发货仓" options={deliveryStoreOption} allowClear />
+                  </Form.Item>
+                </Col>
+              )}
               <Col md={{ span: 6 }}>
                 <Form.Item
-                  name="deliveryStore"
-                  label="发货仓-deliveryStore"
-                  rules={[{ required: false }]}
-                >
-                  <Select placeholder="请选择发货仓" options={deliveryStoreOption} allowClear />
-                </Form.Item>
-              </Col>
-              <Col md={{ span: 6 }}>
-                <Form.Item 
                   label={
                     <div style={{ whiteSpace: 'nowrap' }}>最晚发货时间-latestDeliveryTime</div>
                   }
@@ -407,7 +425,7 @@ const CreateOrder = props => {
             <span className="base-info">商品信息</span>
             <Row style={{ marginTop: 20 }}>
               <Col span={24}>
-                <GoodsTable orderForm={form}/>
+                <GoodsTable orderForm={form} />
               </Col>
             </Row>
           </div>
