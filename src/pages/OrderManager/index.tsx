@@ -1,4 +1,4 @@
-import { connect } from 'umi';
+import { connect, history } from 'umi';
 import useTable from './tabstate';
 import { Table, Form, Col, Button, Row, Input, Select } from 'antd';
 import { useState, useEffect } from 'react';
@@ -72,11 +72,15 @@ const orderManager = props => {
     fetchData({ ...fromval, pageNum: pageData.current, pageSize: pageData.pageSize });
   };
   const getDetail=record=>{
+    history.push({pathname:'/CreateOrder',query:{actionType:'detail',platOrderSn:record?.platOrderSn}})
     console.log(record)
   }
   const pageChange = (c, p) => {
     fetchData({ pageNum: c, pageSize: p });
   };
+  const createOrder=()=>{
+    history.push({pathname:'/CreateOrder',query:{actionType:'add'}})
+  }
   useEffect(() => {
     fetchData({ pageNum: 1, pageSize: 10 });
     getOrderStatusInfo()
@@ -91,7 +95,7 @@ const orderManager = props => {
               name="sourceType"
               label="销售模式"
               rules={[{ required: false }]}
-              labelCol={{ span: 8 }}
+              labelCol={{ span: 6 }}
             >
               <Select options={salesModelOption} />
             </Form.Item>
@@ -118,6 +122,9 @@ const orderManager = props => {
               <Button htmlType="reset">重置</Button>
             </Form.Item>
           </Col>
+        </Row>
+        <Row>
+          <Col><Button type='primary' onClick={createOrder} style={{marginBottom:'10px',marginTop:'-10px'}}>新建订单</Button></Col>
         </Row>
       </Form>
       <Table

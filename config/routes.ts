@@ -14,7 +14,7 @@ export default [
         {
           path: '/CreateOrder',
           name: '创建订单',
-          title: '创建订单',
+          // title: '创建订单',
           component: './CreateOrder',
         },
         {

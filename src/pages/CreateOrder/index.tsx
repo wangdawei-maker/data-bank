@@ -18,6 +18,7 @@ import { connect } from 'umi';
 import { useState, useEffect } from 'react';
 import { cloneDeep } from 'lodash';
 import moment from 'moment';
+import qs from 'qs';
 const CreateOrder = props => {
   const { dispatch, addgoddsTable } = props;
   const [form] = Form.useForm(); //form实例
@@ -32,9 +33,10 @@ const CreateOrder = props => {
   const [deliveryStoreOption, setdeliveryStoreOption] = useState<any>([]); //发货仓下拉数据
   const [statusOption, setStatusOption] = useState<any>([]); //订单状态下拉数据
   // const [fetching, setFetching] = useState(false);
-  const [btnLoading, setBtnLoading] = useState(false);
-  const [firstFlage, setFirstFlage] = useState(true);
-  const [firstRender, setFirstRender] = useState(true);
+  const [btnLoading, setBtnLoading] = useState<boolean>(false);
+  const [firstFlage, setFirstFlage] = useState<boolean>(true);
+  const [firstRender, setFirstRender] = useState<boolean>(true);
+  const [queryMsg, setQueryMsg] = useState<any>({});
   //表单提交
   const onFinish = async val => {
     try {
@@ -230,17 +232,47 @@ const CreateOrder = props => {
     let formsrting = JSON.stringify(formval);
     localStorage.setItem('formval', formsrting);
   };
+  //判断是否DF模式
   const isDf = val => {
     try {
       const label = salesModelOption?.filter(ele => ele.value === val)[0]?.label;
       const model = label?.split('_');
-      if (model[1] && model[1] === 'DF') {
+
+      if (model && model[1] === 'DF') {
         return true;
       }
     } catch (e) {
       console.log(e);
     }
-      return false;
+    return false;
+  };
+  const getDetailData = async val => {
+    try {
+      let res = await dispatch({
+        type: 'orderManager/asyncGetList',
+        payload: { pageNum: 1, pageSize: 10, platOrderSn: val },
+      });
+      if (res?.code === 200) {
+        let { content } = res.data;
+        let firstObj = content[0];
+        let { jsonBody, jsonParam } = firstObj;
+        console.log({ ...firstObj?.jsonBody });
+        form.setFieldsValue({
+          ...jsonBody,
+          latestDeliveryTime: moment(jsonBody?.latestDeliveryTime),
+          shopAccount: jsonParam?.shopAccount,
+          userId: jsonBody?.buyerName,
+          status:jsonBody?.status+'',
+          sourceType: jsonBody?.sourceType + '',
+        });
+        dispatch({
+          type: 'CreateOrder/save',
+          payload: { addgoddsTable: jsonBody?.orderDetailVOList },
+        });
+      }
+    } catch (e) {
+      console.log(e);
+    }
   };
   //获取页面需要的下拉数据
   const getDefultSelect = () => {
@@ -280,18 +312,19 @@ const CreateOrder = props => {
   }, [sourceType]);
   useEffect(() => {
     getDefultSelect();
-    if (localStorage.getItem('formval') as any) {
-      let formval = JSON.parse(localStorage.getItem('formval') as any);
-      if (formval) {
-        if (formval?.latestDeliveryTime) {
-          formval.latestDeliveryTime = moment(formval?.latestDeliveryTime);
+    const { actionType, platOrderSn } = qs.parse(location.search.slice(1)) as any;
+    setQueryMsg({ actionType, platOrderSn });
+    if (actionType === 'detail') {
+      getDetailData(platOrderSn);
+    } else {
+      if (localStorage.getItem('formval') as any) {
+        let formval = JSON.parse(localStorage.getItem('formval') as any);
+        if (formval) {
+          if (formval?.latestDeliveryTime) {
+            formval.latestDeliveryTime = moment(formval?.latestDeliveryTime);
+          }
+          form.setFieldsValue(formval);
         }
-        // if (formval?.shopAccount) {
-        //   let searchval = localStorage.getItem('searchval');
-        //   debounceFetcher(searchval);
-        // }
-        console.log(formval);
-        form.setFieldsValue(formval);
       }
     }
   }, []);
@@ -299,7 +332,7 @@ const CreateOrder = props => {
   return (
     <div className="creatOrder">
       <Card>
-        <Form form={form} layout="vertical" onFinish={onFinish} onFieldsChange={onFieldsChange}>
+        <Form form={form} layout="vertical" onFinish={onFinish} onFieldsChange={onFieldsChange} disabled={queryMsg?.actionType==='detail'}>
           <div>
             <Space>
               <MinusOutlined rotate={90} className="line" />

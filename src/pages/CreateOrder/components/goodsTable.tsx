@@ -91,6 +91,14 @@ const GoodsTable: React.FC = (props: any) => {
       title: '商品名称',
       dataIndex: 'goodsName',
       with: 200,
+      ellipsis: {
+        showTitle: false,
+      },
+      render: (address) => (
+        <Tooltip placement="topLeft" title={address}>
+          {address}
+        </Tooltip>
+      ),
     },
     {
       title: '商品编号',
