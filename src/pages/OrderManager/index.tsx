@@ -1,7 +1,8 @@
 import { connect, history } from 'umi';
 import useTable from './tabstate';
-import { Table, Form, Col, Button, Row, Input, Select } from 'antd';
+import { Table, Form, Col, Button, Row, Input, Select,DatePicker } from 'antd';
 import { useState, useEffect } from 'react';
+import moment from 'moment';
 const orderManager = props => {
   const { dispatch } = props;
   const [form] = Form.useForm();
@@ -10,7 +11,6 @@ const orderManager = props => {
   const [tableData, setTableData] = useState<any>([]); //table数据
   const [pageData, setPageData] = useState<any>({ current: 1, pageSize: 10 }); //分页信息
   const [loading, setLoading] = useState(false);
-
   const onFinish = val => {
     console.log(val);
     fetchData(val);
@@ -47,9 +47,16 @@ const orderManager = props => {
   const fetchData = async obj => {
     try {
       setLoading(true);
+      if(obj?.gmtCreate){
+        obj.gmtCreate=moment(obj?.gmtCreate).format('YYYY-MM-DD HH:MM:SS')
+      }
+      if(obj?.gmtModified){
+        obj.gmtModified=moment(obj?.gmtModified).format('YYYY-MM-DD HH:MM:SS')
+      }
       let res = await dispatch({
         type: 'orderManager/asyncGetList',
         payload: { pageNum: pageData?.current, pageSize: pageData?.pageSize, ...obj },
+        
       });
       if (res.code === 200) {
         const { pageNum, pageSize, totalSize, content } = res?.data;
@@ -71,46 +78,81 @@ const orderManager = props => {
     let fromval = form.getFieldsValue();
     fetchData({ ...fromval, pageNum: pageData.current, pageSize: pageData.pageSize });
   };
-  const getDetail=record=>{
-    history.push({pathname:'/CreateOrder',query:{actionType:'detail',platOrderSn:record?.platOrderSn}})
-    console.log(record)
-  }
+  const getDetail = record => {
+    history.push({
+      pathname: '/CreateOrder',
+      query: { actionType: 'detail', platOrderSn: record?.platOrderSn },
+    });
+    console.log("打印record"+record);
+  };
   const pageChange = (c, p) => {
     fetchData({ pageNum: c, pageSize: p });
   };
-  const createOrder=()=>{
-    history.push({pathname:'/CreateOrder',query:{actionType:'add'}})
-  }
+  const createOrder = () => {
+    history.push({ pathname: '/CreateOrder', query: { actionType: 'add' } });
+  };
   useEffect(() => {
     fetchData({ pageNum: 1, pageSize: 10 });
-    getOrderStatusInfo()
+    getOrderStatusInfo();
     getSourceEnums({});
   }, []);
   return (
     <div>
       <Form form={form} onFinish={onFinish}>
         <Row>
-          <Col span={6}>
+          <Col span={7} >
             <Form.Item
               name="sourceType"
               label="销售模式"
               rules={[{ required: false }]}
-              labelCol={{ span: 6 }}
+              labelCol={{ span: 7 }}
             >
               <Select options={salesModelOption} />
             </Form.Item>
           </Col>
-          <Col span={6}>
+          <Col span={7} offset={1}>
+            <Form.Item
+              name="sourceType"
+              label="销售站点"
+              rules={[{ required: false }]}
+              labelCol={{ span: 7 }}
+            >
+              <Select options={salesModelOption} />
+            </Form.Item>
+          </Col>
+          <Col span={7} offset={1}>
             <Form.Item
               name="platOrderSn"
               label="平台订单号"
               rules={[{ required: false }]}
-              labelCol={{ span: 8 }}
+              labelCol={{ span: 7 }}
             >
               <Input />
             </Form.Item>
           </Col>
-          <Col offset={2}>
+
+          <Col span={7} >
+            <Form.Item
+              name="gmtCreate"
+              label="订单创建时间"
+              rules={[{ required: false }]}
+              labelCol={{ span: 7}}
+            >
+              <DatePicker style={{width:'100%'}}></DatePicker>
+            </Form.Item>
+          </Col>
+          <Col span={7} offset={1}>
+            <Form.Item
+              name="gmtModified"
+              label="订单结束时间"
+              rules={[{ required: false }]}
+              labelCol={{ span: 7 }}
+            >
+              <DatePicker  style={{width:'100%'}}></DatePicker>
+            </Form.Item>
+          </Col>
+
+          <Col offset={3}>
             <Form.Item>
               <Button htmlType="submit" type="primary">
                 查询
@@ -122,15 +164,22 @@ const orderManager = props => {
               <Button htmlType="reset">重置</Button>
             </Form.Item>
           </Col>
-        </Row>
-        <Row>
-          <Col><Button type='primary' onClick={createOrder} style={{marginBottom:'10px',marginTop:'-10px'}}>新建订单</Button></Col>
+
+          <Col offset={4} pull={4}>
+            <Button
+              type="primary"
+              onClick={createOrder}
+              style={{ marginBottom: '10px', marginTop: '-10px' }}
+            >
+              创建订单
+            </Button>
+          </Col>
         </Row>
       </Form>
       <Table
         dataSource={tableData}
         rowKey={'id'}
-        {...useTable({ type: 'orderTable', salesModelOption,statusOption,getDetail })}
+        {...useTable({ type: 'orderTable', salesModelOption, statusOption, getDetail })}
         pagination={{
           onChange: pageChange,
           current: pageData?.current,

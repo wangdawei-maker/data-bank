@@ -246,6 +246,19 @@ const CreateOrder = props => {
     }
     return false;
   };
+  //判断是否ebay
+  const iseBay = val => {
+    try {
+      const label = salesModelOption?.filter(ele => ele.value === val)[0]?.label;
+
+      if (label && label === 'EBAY') {
+        return true;
+      }
+    } catch (e) {
+      console.log(e);
+    }
+    return false;
+  };
   const getDetailData = async val => {
     try {
       let res = await dispatch({
@@ -262,7 +275,7 @@ const CreateOrder = props => {
           latestDeliveryTime: moment(jsonBody?.latestDeliveryTime),
           shopAccount: jsonParam?.shopAccount,
           userId: jsonBody?.buyerName,
-          status:jsonBody?.status+'',
+          status: jsonBody?.status + '',
           sourceType: jsonBody?.sourceType + '',
         });
         dispatch({
@@ -332,7 +345,13 @@ const CreateOrder = props => {
   return (
     <div className="creatOrder">
       <Card>
-        <Form form={form} layout="vertical" onFinish={onFinish} onFieldsChange={onFieldsChange} disabled={queryMsg?.actionType==='detail'}>
+        <Form
+          form={form}
+          layout="vertical"
+          onFinish={onFinish}
+          onFieldsChange={onFieldsChange}
+          disabled={queryMsg?.actionType === 'detail'}
+        >
           <div>
             <Space>
               <MinusOutlined rotate={90} className="line" />
@@ -436,6 +455,17 @@ const CreateOrder = props => {
                     rules={[{ required: true, message: '请选择' }]}
                   >
                     <Select placeholder="请选择发货仓" options={deliveryStoreOption} allowClear />
+                  </Form.Item>
+                </Col>
+              )}
+              {iseBay(sourceType) && (
+                <Col md={{ span: 6 }}>
+                  <Form.Item
+                    name="deliveryStore"
+                    label="官方仓"
+                    rules={[{ required: true, message: '请选择' }]}
+                  >
+                    <Select placeholder="请选择官方仓" options={deliveryStoreOption} allowClear />
                   </Form.Item>
                 </Col>
               )}
