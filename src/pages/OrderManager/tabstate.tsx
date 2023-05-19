@@ -13,9 +13,9 @@ const useTable = props => {
         { title: '订单状态', dataIndex: 'status', width: 200 ,render:(txt)=>{
           return statusOption.filter(item=>item.value==txt)[0]?.label
         }},
-        {title:'操作',render:(record)=>{
-          return <div> <a onClick={()=>getDetail(record)}>详情</a></div>
-        }}
+        // {title:'操作',render:(record)=>{
+        //   return <div> <a onClick={()=>getDetail(record)}>详情</a></div>
+        // }}
       ],
     },
   };
